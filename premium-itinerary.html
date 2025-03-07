@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamAiTrip - Barcelona Adventure</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0052CC;
+            --secondary-blue: #BBDEFB;
+            --accent-yellow: #FFD700;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        .itinerary-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #1976D2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .itinerary-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100'%3E%3Cpath fill='%23f8fafc' fill-opacity='1' d='M0,32L60,42.7C120,53,240,75,360,74.7C480,75,600,53,720,42.7C840,32,960,32,1080,42.7C1200,53,1320,75,1380,85.3L1440,96L1440,100L1380,100C1320,100,1200,100,1080,100C960,100,840,100,720,100C600,100,480,100,360,100C240,100,120,100,60,100L0,100Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+        }
+        
+        .tag {
+            background-color: rgba(0, 82, 204, 0.1);
+            color: var(--primary-blue);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .day-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeline-point {
+            width: 16px;
+            height: 16px;
+            background-color: var(--primary-blue);
+            border-radius: 50%;
+            margin-right: 12px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .timeline-point::after {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 7px;
+            bottom: -16px;
+            width: 2px;
+            background-color: #e2e8f0;
+        }
+        
+        .activity-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+        
+        .activity-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .expense-pill {
+            background-color: #f3f4f6;
+            border-radius: 20px;
+            padding: 2px 12px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .badge-free {
+            background-color: var(--primary-blue);
+            color: white;
+            border-radius: 20px;
+            padding: 2px 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-premium {
+            background-color: var(--accent-yellow);
+            color: #333;
+            border-radius: 20px;
+            padding: 2px 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .booking-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .booking-btn:hover {
+            background-color: #0047b3;
+        }
+        
+        .cost-breakdown-section {
+            background-color: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .local-tips-card {
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        
+        /* Print Styles */
+        @media print {
+            .no-print {
+                display: none;
+            }
+            
+            body {
+                background-color: white;
+            }
+            
+            .day-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                margin-bottom: 20px;
+            }
+            
+            .print-page-break {
+                page-break-before: always;
+            }
+        }
+        
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .itinerary-header {
+                padding: 20px;
+            }
+            
+            .day-selector {
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 10px;
+            }
+            
+            .timeline-point::after {
+                bottom: -30px;
+            }
+        }
+        
+        /* Interactive Map Styling */
+        .map-container {
+            height: 350px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50 no-print">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <img src="/api/placeholder/120/40" alt="DreamAiTrip Logo" class="h-10">
+            </div>
+            <div class="flex space-x-4">
+                <button class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100">
+                    <i class="fas fa-share-alt mr-2"></i> Share
+                </button>
+                <button class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100" onclick="window.print()">
+                    <i class="fas fa-print mr-2"></i> Print
+                </button>
+                <button class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                    <i class="fas fa-download mr-2"></i> Download PDF
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Itinerary Header -->
+    <header class="itinerary-header text-white py-12 md:py-16 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <span class="badge-premium mr-3">PREMIUM ITINERARY</span>
+                        <span class="text-sm opacity-80">Created on March 6, 2025</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold mb-3">Barcelona Dream Adventure</h1>
+                    <div class="flex flex-wrap gap-3 mb-5">
+                        <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">7 Days</span>
+                        <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">May 15-22, 2025</span>
+                        <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">2 Adults</span>
+                        <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">From New York</span>
+                    </div>
+                    <div class="text-xl md:text-2xl font-bold">
+                        Total Budget: $2,410
+                    </div>
+                </div>
+                <div class="mt-6 md:mt-0 bg-white text-gray-800 p-4 rounded-lg shadow-lg">
+                    <div class="text-center">
+                        <div class="text-sm text-gray-500 mb-1">Expert-Verified by</div>
+                        <div class="flex items-center">
+                            <img src="/api/placeholder/40/40" alt="Expert Avatar" class="w-10 h-10 rounded-full mr-3">
+                            <div>
+                                <div class="font-bold">Maria Rodriguez</div>
+                                <div class="text-sm text-blue-600">Barcelona Specialist</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 backdrop-filter backdrop-blur-sm">
+                    <div class="flex items-start">
+                        <i class="fas fa-plane-departure text-2xl mr-4 mt-1"></i>
+                        <div>
+                            <h3 class="font-bold mb-1">Flights</h3>
+                            <p class="text-sm">Delta Airlines (Round Trip)</p>
+                            <p class="font-bold mt-2">$820</p>
+                            <a href="#" class="text-xs underline mt-1 inline-block hover:text-blue-200">Book now →</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 backdrop-filter backdrop-blur-sm">
+                    <div class="flex items-start">
+                        <i class="fas fa-hotel text-2xl mr-4 mt-1"></i>
+                        <div>
+                            <h3 class="font-bold mb-1">Accommodation</h3>
+                            <p class="text-sm">H10 Madison (6 nights)</p>
+                            <p class="font-bold mt-2">$980</p>
+                            <a href="#" class="text-xs underline mt-1 inline-block hover:text-blue-200">Book now →</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 backdrop-filter backdrop-blur-sm">
+                    <div class="flex items-start">
+                        <i class="fas fa-utensils text-2xl mr-4 mt-1"></i>
+                        <div>
+                            <h3 class="font-bold mb-1">Food & Dining</h3>
+                            <p class="text-sm">Avg. $35 per person/day</p>
+                            <p class="font-bold mt-2">$490</p>
+                            <span class="text-xs mt-1 inline-block">Recommendations included</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 backdrop-filter backdrop-blur-sm">
+                    <div class="flex items-start">
+                        <i class="fas fa-ticket-alt text-2xl mr-4 mt-1"></i>
+                        <div>
+                            <h3 class="font-bold mb-1">Activities</h3>
+                            <p class="text-sm">12 experiences included</p>
+                            <p class="font-bold mt-2">$120</p>
+                            <a href="#" class="text-xs underline mt-1 inline-block hover:text-blue-200">View all →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Interactive Map -->
+        <section class="mb-12">
+            <div class="map-container bg-gray-200">
+                <img src="/api/placeholder/1200/350" alt="Barcelona Map" class="w-full h-full object-cover">
+                <div class="map-overlay">
+                    <div class="text-center">
+                        <i class="fas fa-map-marked-alt text-4xl mb-3"></i>
+                        <p>Click to view interactive map with all locations</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Day Selection -->
+        <section class="mb-8 no-print">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold">Your 7-Day Itinerary</h2>
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1 rounded-lg border border-gray-300 text-sm">
+                        <i class="fas fa-list mr-1"></i> List View
+                    </button>
+                    <button class="px-3 py-1 rounded-lg bg-blue-600 text-white text-sm">
+                        <i class="fas fa-calendar-alt mr-1"></i> Day View
+                    </button>
+                </div>
+            </div>
+            
+            <div class="day-selector flex space-x-2 overflow-x-auto pb-4">
+                <button class="flex flex-col items-center justify-center bg-blue-600 text-white rounded-lg py-2 px-4 min-w-[80px]">
+                    <span class="text-xs">Day 1</span>
+                    <span class="font-bold">May 15</span>
+                </button>
+                <button class="flex flex-col items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg py-2 px-4 min-w-[80px]">
+                    <span class="text-xs">Day 2</span>
+                    <span class="font-bold">May 16</span>
+                </button>
+                <button class="flex flex-col items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg py-2 px-4 min-w-[80px]">
+                    <span class="text-xs">Day 3</span>
+                    <span class="font-bold">May 17</span>
+                </button>
+                <button class="flex flex-col items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg py-2 px-4 min-w-[80px]">
+                    <span class="text-xs">Day 4</span>
+                    <span class="font-bold">May 18</span>
+                </button>
+                <button class="flex flex-col items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg py-2 px-4 min-w-[80px]">
+                    <span class="text-xs">Day 5</span>
+                    <span class="font-bold">May 19</span>
+                </button>
+                <button class="flex flex-col items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg py-2 px-4 min-w-[80px]">
+                    <span class="text-xs">Day 6</span>
+                    <span class="font-bold">May 20</span>
+                </button>
+                <button class="flex flex-col items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg py-2 px-4 min-w-[80px]">
+                    <span class="text-xs">Day 7</span>
+                    <span class="font-bold">May 21</span>
+                </button>
+            </div>
+        </section>
+        
+        <!-- Day 1 Details -->
+        <section class="mb-16">
+            <div class="flex items-center mb-6">
+                <h2 class="text-2xl font-bold">Day 1: Arrival & City Introduction</h2>
+                <span class="ml-auto text-sm text-gray-500">Thursday, May 15</span>
+            </div>
+            
+            <div class="day-card bg-white overflow-hidden">
+                <div class="p-6">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-blue-100 text-blue-800 rounded-full p-2 mr-4">
+                            <i class="fas fa-plane-arrival text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Arrival in Barcelona</h3>
+                            <p class="text-gray-500">El Prat Airport (BCN) - Terminal 1</p>
+                        </div>
+                        <div class="ml-auto">
+                            <span class="text-gray-700">8:45 AM</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-8">
+                        <!-- Activity 1 -->
+                        <div class="flex">
+                            <div class="timeline-point"></div>
+                            <div class="w-full">
+                                <div class="activity-card p-4">
+                                    <div class="flex items-start">
+                                        <div>
+                                            <h4 class="font-bold mb-1">Airport Transfer to Hotel</h4>
+                                            <p class="text-gray-600 text-sm mb-3">Private car service with English-speaking driver</p>
+                                            
+                                            <div class="flex flex-wrap mb-4">
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-euro-sign text-blue-600 mr-1"></i> 45
+                                                </span>
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-clock text-blue-600 mr-1"></i> 30 min
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="flex">
+                                                <a href="#" class="booking-btn">
+                                                    <i class="fas fa-link mr-1"></i> Book Transfer
+                                                </a>
+                                                <button class="ml-3 text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-info-circle"></i> Details
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="ml-auto">
+                                            <span class="text-gray-700">9:15 AM</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Activity 2 -->
+                        <div class="flex">
+                            <div class="timeline-point"></div>
+                            <div class="w-full">
+                                <div class="activity-card p-4">
+                                    <div class="flex items-start">
+                                        <div>
+                                            <h4 class="font-bold mb-1">Check-in at H10 Madison</h4>
+                                            <p class="text-gray-600 text-sm mb-3">4-star hotel in Gothic Quarter with rooftop terrace</p>
+                                            
+                                            <div class="mb-3 text-sm">
+                                                <span class="text-green-600 font-medium">
+                                                    <i class="fas fa-check-circle"></i> Early check-in arranged
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="flex flex-wrap mb-4">
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-euro-sign text-blue-600 mr-1"></i> 980 (total stay)
+                                                </span>
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-star text-yellow-400 mr-1"></i> 4.6/5
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="flex">
+                                                <a href="#" class="booking-btn">
+                                                    <i class="fas fa-hotel mr-1"></i> Book Hotel
+                                                </a>
+                                                <button class="ml-3 text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-map-marker-alt mr-1"></i> Directions
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="ml-auto">
+                                            <span class="text-gray-700">10:00 AM</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Activity 3 -->
+                        <div class="flex">
+                            <div class="timeline-point"></div>
+                            <div class="w-full">
+                                <div class="activity-card p-4">
+                                    <div class="flex items-start">
+                                        <div>
+                                            <div class="flex items-center mb-1">
+                                                <h4 class="font-bold">Lunch at El Nacional</h4>
+                                                <span class="badge-premium ml-3 text-xs">EXPERT PICK</span>
+                                            </div>
+                                            <p class="text-gray-600 text-sm mb-3">Upscale food hall with multiple restaurants and bars</p>
+                                            
+                                            <div class="flex flex-wrap mb-4">
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-euro-sign text-blue-600 mr-1"></i> 30-40 per person
+                                                </span>
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-clock text-blue-600 mr-1"></i> 1.5 hours
+                                                </span>
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-utensils text-blue-600 mr-1"></i> Spanish
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-4 text-sm">
+                                                <span class="font-medium block mb-1">Expert Tip:</span>
+                                                <p>Try La Taperia section for authentic tapas. Order the Jamón ibérico and pan con tomate.</p>
+                                            </div>
+                                            
+                                            <div class="flex">
+                                                <a href="#" class="booking-btn">
+                                                    <i class="fas fa-calendar-alt mr-1"></i> Make Reservation
+                                                </a>
+                                                <button class="ml-3 text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-map-marker-alt mr-1"></i> Directions
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="ml-auto">
+                                            <span class="text-gray-700">1:00 PM</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Activity 4 -->
+                        <div class="flex">
+                            <div class="timeline-point"></div>
+                            <div class="w-full">
+                                <div class="activity-card p-4">
+                                    <div class="flex items-start">
+                                        <div>
+                                            <h4 class="font-bold mb-1">Gothic Quarter Walking Tour</h4>
+                                            <p class="text-gray-600 text-sm mb-3">Guided 3-hour walking tour through Barcelona's historic heart</p>
+                                            
+                                            <div class="flex flex-wrap mb-4">
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-euro-sign text-blue-600 mr-1"></i> 25 per person
+                                                </span>
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-clock text-blue-600 mr-1"></i> 3 hours
+                                                </span>
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-language text-blue-600 mr-1"></i> English
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="flex">
+                                                <a href="#" class="booking-btn">
+                                                    <i class="fas fa-ticket-alt mr-1"></i> Book Tour
+                                                </a>
+                                                <button class="ml-3 text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-info-circle"></i> Details
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="ml-auto">
+                                            <span class="text-gray-700">3:00 PM</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Activity 5 -->
+                        <div class="flex">
+                            <div class="timeline-point"></div>
+                            <div class="w-full">
+                                <div class="activity-card p-4">
+                                    <div class="flex items-start">
+                                        <div>
+                                            <div class="flex items-center mb-1">
+                                                <h4 class="font-bold">Dinner at Can Culleretes</h4>
+                                                <span class="badge-premium ml-3 text-xs">INSIDER PICK</span>
+                                            </div>
+                                            <p class="text-gray-600 text-sm mb-3">Barcelona's oldest restaurant (since 1786), serving traditional Catalan cuisine</p>
+                                            
+                                            <div class="flex flex-wrap mb-4">
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-euro-sign text-blue-600 mr-1"></i> 35-45 per person
+                                                </span>
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-clock text-blue-600 mr-1"></i> 2 hours
+                                                </span>
+                                                <span class="expense-pill">
+                                                    <i class="fas fa-star text-yellow-400 mr-1"></i> 4.5/5
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-4 text-sm">
+                                                <span class="font-medium block mb-1">Local Tip:</span>
+                                                <p>Order the "Canelones de la casa" and "Pato con peras" (duck with pears). Reservation required at least 1 week in advance.</p>
+                                            </div>
+                                            
+                                            <div class="flex">
+                                                <a href="#" class="booking-btn">
+                                                    <i class="fas fa-calendar-alt mr-1"></i> Make Reservation
+                                                </a>
+                                                <button class="ml-3 text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-map-marker-alt mr-1"></i> Directions
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="ml-auto">
+                                            <span class="text-gray-700">7:30 PM</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Local Tips & Essentials -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold mb-6">Local Tips & Essential Information</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Weather -->
+                <div class="local-tips-card">
+                    <div class="bg-blue-600 text-white p-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-cloud-sun text-2xl mr-3"></i>
+                            <h3 class="text-lg font-bold">Weather Forecast</h3>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-sm text-gray-500">During your stay: May 15-22</div>
+                            <div class="text-sm font-medium">Spring Season</div>
+                        </div>
+                        
+                        <div class="flex items-center mb-4">
+                            <div class="text-4xl font-bold text-gray-800 mr-3">72°F</div>
+                            <div>
+                                <div class="font-medium">Average High</div>
+                                <div class="text-sm text-gray-500">59°F Average Low</div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 text-sm text-gray-600">
+                            <p><i class="fas fa-umbrella text-blue-600 mr-2"></i> 20% chance of rain</p>
+                            <p><i class="fas fa-tshirt text-blue-600 mr-2"></i> Pack light layers and a light jacket for evenings</p>
+                            <p><i class="fas fa-sun text-blue-600 mr-2"></i> Don't forget sunscreen and sunglasses</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Currency & Money -->
+                <div class="local-tips-card">
+                    <div class="bg-blue-600 text-white p-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-euro-sign text-2xl mr-3"></i>
+                            <h3 class="text-lg font-bold">Currency & Money</h3>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="mb-4">
+                            <div class="font-medium mb-1">Current Exchange Rate</div>
+                            <div class="flex items-center">
+                                <div class="text-2xl font-bold text-gray-800 mr-2">1 USD = 0.92 EUR</div>
+                                <span class="text-xs text-green-600">Updated today</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 text-sm text-gray-600 mb-4">
+                            <p><i class="fas fa-credit-card text-blue-600 mr-2"></i> Credit cards widely accepted (Visa/Mastercard preferred)</p>
+                            <p><i class="fas fa-money-bill-wave text-blue-600 mr-2"></i> Keep some cash (€100-200) for small purchases</p>
+                            <p><i class="fas fa-university text-blue-600 mr-2"></i> Avoid currency exchange at airports; use bank ATMs instead</p>
+                            <p><i class="fas fa-percentage text-blue-600 mr-2"></i> Typical tip: 5-10% at restaurants (if service not included)</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-3 rounded-lg text-xs">
+                            <div class="font-medium mb-1">Money-Saving Tip:</div>
+                            <p>Always choose to be charged in EUR when using your card to avoid poor conversion rates.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Local Transportation -->
+                <div class="local-tips-card">
+                    <div class="bg-blue-600 text-white p-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-subway text-2xl mr-3"></i>
+                            <h3 class="text-lg font-bold">Getting Around</h3>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="mb-4">
+                            <div class="font-medium mb-2">Recommended Passes</div>
+                            <div class="bg-green-100 text-green-800 px-3 py-1 rounded-lg inline-flex items-center text-sm">
+                                <i class="fas fa-check-circle mr-1"></i> T-Casual (10 journeys for €11.35)
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 text-sm text-gray-600">
+                            <p><i class="fas fa-train text-blue-600 mr-2"></i> Metro: Most efficient for longer distances</p>
+                            <p><i class="fas fa-bus text-blue-600 mr-2"></i> Bus: Good for scenic routes</p>
+                            <p><i class="fas fa-walking text-blue-600 mr-2"></i> Gothic Quarter is best explored on foot</p>
+                            <p><i class="fas fa-taxi text-blue-600 mr-2"></i> Taxis are safe and reasonably priced</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <a href="#" class="text-blue-600 text-sm font-medium hover:underline flex items-center">
+                                <i class="fas fa-map-alt mr-1"></i> Download Metro Map
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <!-- Cultural Tips -->
+                <div class="local-tips-card">
+                    <div class="bg-blue-600 text-white p-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-globe-americas text-2xl mr-3"></i>
+                            <h3 class="text-lg font-bold">Cultural Tips</h3>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="space-y-3 text-sm text-gray-600">
+                            <div class="flex items-start">
+                                <i class="fas fa-clock text-blue-600 mt-1 mr-3"></i>
+                                <div>
+                                    <span class="font-medium block">Spanish Schedule</span>
+                                    <p>Lunch: 2-4pm, Dinner: 9-11pm. Many shops close for siesta (2-5pm).</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-language text-blue-600 mt-1 mr-3"></i>
+                                <div>
+                                    <span class="font-medium block">Language</span>
+                                    <p>Spanish (Castilian) and Catalan are both official. Basic Spanish phrases are appreciated.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-users text-blue-600 mt-1 mr-3"></i>
+                                <div>
+                                    <span class="font-medium block">Social Customs</span>
+                                    <p>Greet with two kisses (cheek to cheek). Be aware that Catalans are proud of their distinct culture.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-exclamation-triangle text-blue-600 mt-1 mr-3"></i>
+                                <div>
+                                    <span class="font-medium block">Safety</span>
+                                    <p>Watch for pickpockets, especially on Las Ramblas and in metro stations. Keep valuables secure.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Food Guide -->
+                <div class="local-tips-card">
+                    <div class="bg-blue-600 text-white p-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-utensils text-2xl mr-3"></i>
+                            <h3 class="text-lg font-bold">Must-Try Food & Drink</h3>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-sm">
+                                <div class="font-medium mb-2">Local Specialties</div>
+                                <ul class="space-y-2 text-gray-600">
+                                    <li><i class="fas fa-circle text-xs text-blue-600 mr-2"></i> Paella</li>
+                                    <li><i class="fas fa-circle text-xs text-blue-600 mr-2"></i> Patatas Bravas</li>
+                                    <li><i class="fas fa-circle text-xs text-blue-600 mr-2"></i> Pa amb Tomàquet</li>
+                                    <li><i class="fas fa-circle text-xs text-blue-600 mr-2"></i> Crema Catalana</li>
+                                    <li><i class="fas fa-circle text-xs text-blue-600 mr-2"></i> Bombas</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="text-sm">
+                                <div class="font-medium mb-2">Drinks</div>
+                                <ul class="space-y-2 text-gray-600">
+                                    <li><i class="fas fa-circle text-xs text-blue-600 mr-2"></i> Sangria</li>
+                                    <li><i class="fas fa-circle text-xs text-blue-600 mr-2"></i> Vermut</li>
+                                    <li><i class="fas fa-circle text-xs text-blue-600 mr-2"></i> Cava</li>
+                                    <li><i class="fas fa-circle text-xs text-blue-600 mr-2"></i> Clara (beer with lemon)</li>
+                                    <li><i class="fas fa-circle text-xs text-blue-600 mr-2"></i> Orxata</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-3 text-xs">
+                            <span class="font-medium block mb-1">Local Expert Tip:</span>
+                            <p>For authentic paella, avoid restaurants on Las Ramblas. The best paella is found at specialized restaurants like Can Solé in Barceloneta.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Cost Breakdown -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold mb-6">Detailed Cost Breakdown</h2>
+            
+            <div class="cost-breakdown-section p-6">
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-bold">Total Trip Cost</h3>
+                        <span class="text-2xl font-bold text-blue-600">$2,410</span>
+                    </div>
+                    <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div class="flex">
+                            <div class="h-full bg-blue-600 w-1/3"></div>
+                            <div class="h-full bg-green-500 w-2/5"></div>
+                            <div class="h-full bg-yellow-500 w-1/6"></div>
+                            <div class="h-full bg-red-500 w-1/12"></div>
+                        </div>
+                    </div>
+                    <div class="flex text-xs text-gray-500 mt-1 justify-between">
+                        <span>Flights: 34%</span>
+                        <span>Accommodation: 40%</span>
+                        <span>Food: 20%</span>
+                        <span>Activities: 6%</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left Column -->
+                    <div>
+                        <!-- Flights -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold flex items-center">
+                                    <i class="fas fa-plane text-blue-600 mr-2"></i> Flights
+                                </h4>
+                                <span class="font-bold text-blue-600">$820</span>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg shadow-sm p-4 mb-3">
+                                <div class="flex justify-between mb-2">
+                                    <div>
+                                        <div class="font-medium">Outbound: JFK to BCN</div>
+                                        <div class="text-sm text-gray-500">Delta Airlines • DL6744</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="font-medium">$410</div>
+                                        <div class="text-sm text-gray-500">Per person</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center text-sm text-gray-600 mb-3">
+                                    <div class="w-20">May 14</div>
+                                    <div class="w-20">8:35 PM</div>
+                                    <div>New York (JFK)</div>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-blue-600">
+                                        <i class="fas fa-plane"></i>
+                                    </div>
+                                    <div class="flex-1 mx-4">
+                                        <div class="h-0.5 bg-gray-300 relative">
+                                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 whitespace-nowrap">
+                                                7h 55m • Direct
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-blue-600">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center text-sm text-gray-600 mt-3">
+                                    <div class="w-20">May 15</div>
+                                    <div class="w-20">10:30 AM</div>
+                                    <div>Barcelona (BCN)</div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <a href="#" class="text-blue-600 text-sm hover:underline">Book this flight →</a>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg shadow-sm p-4">
+                                <div class="flex justify-between mb-2">
+                                    <div>
+                                        <div class="font-medium">Return: BCN to JFK</div>
+                                        <div class="text-sm text-gray-500">Delta Airlines • DL6745</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="font-medium">$410</div>
+                                        <div class="text-sm text-gray-500">Per person</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center text-sm text-gray-600 mb-3">
+                                    <div class="w-20">May 22</div>
+                                    <div class="w-20">12:25 PM</div>
+                                    <div>Barcelona (BCN)</div>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-blue-600">
+                                        <i class="fas fa-plane fa-flip-horizontal"></i>
+                                    </div>
+                                    <div class="flex-1 mx-4">
+                                        <div class="h-0.5 bg-gray-300 relative">
+                                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 whitespace-nowrap">
+                                                8h 45m • Direct
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-blue-600">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center text-sm text-gray-600 mt-3">
+                                    <div class="w-20">May 22</div>
+                                    <div class="w-20">3:10 PM</div>
+                                    <div>New York (JFK)</div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <a href="#" class="text-blue-600 text-sm hover:underline">Book this flight →</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Food & Dining -->
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold flex items-center">
+                                    <i class="fas fa-utensils text-blue-600 mr-2"></i> Food & Dining
+                                </h4>
+                                <span class="font-bold text-blue-600">$490</span>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg shadow-sm p-4">
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm">Breakfast</div>
+                                        <div class="text-sm font-medium">$10/person/day</div>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm">Lunch</div>
+                                        <div class="text-sm font-medium">$15/person/day</div>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm">Dinner</div>
+                                        <div class="text-sm font-medium">$35/person/day</div>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm">Drinks & Snacks</div>
+                                        <div class="text-sm font-medium">$10/person/day</div>
+                                    </div>
+                                    <div class="flex justify-between items-center border-t pt-2">
+                                        <div class="font-medium">7-day Total (2 people)</div>
+                                        <div class="font-medium">$490</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 bg-blue-50 p-3 rounded text-sm">
+                                    <div class="font-medium mb-1">Money-Saving Tip:</div>
+                                    <p>Many restaurants offer fixed-price lunch menus (menú del día) for €10-15 that include 3 courses and a drink.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div>
+                        <!-- Accommodation -->
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold flex items-center">
+                                    <i class="fas fa-hotel text-blue-600 mr-2"></i> Accommodation
+                                </h4>
+                                <span class="font-bold text-blue-600">$980</span>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg shadow-sm p-4">
+                                <div class="flex items-start mb-4">
+                                    <img src="/api/placeholder/120/80" alt="H10 Madison" class="w-20 h-16 object-cover rounded mr-4">
+                                    <div>
+                                        <h5 class="font-bold">H10 Madison</h5>
+                                        <div class="flex items-center mb-1">
+                                            <div class="flex text-yellow-400 text-xs">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star-half-alt"></i>
+                                            </div>
+                                            <span class="text-xs text-gray-500 ml-1">4.8/5 (1,240 reviews)</span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Boutique hotel in Gothic Quarter</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-3 text-sm mb-4">
+                                    <div class="flex justify-between">
+                                        <div>Superior Room, 1 King Bed</div>
+                                        <div class="font-medium">$140/night</div>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <div>City Tax</div>
+                                        <div class="font-medium">$2.50/person/night</div>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <div>Breakfast</div>
+                                        <div class="font-medium">$20/person/day</div>
+                                    </div>
+                                    <div class="flex justify-between border-t pt-2">
+                                        <div class="font-medium">Total for 7 nights</div>
+                                        <div class="font-medium">$980</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-wrap mb-4">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs mr-2 mb-2">Rooftop Terrace</span>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs mr-2 mb-2">Free Wi-Fi</span>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs mr-2 mb-2">Air Conditioning</span>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs mr-2 mb-2">Fitness Center</span>
+                                </div>
+                                
+                                <div class="flex">
+                                    <a href="#" class="booking-btn">
+                                        <i class="fas fa-hotel mr-1"></i> Book Now
+                                    </a>
+                                    <button class="ml-3 text-blue-600 hover:text-blue-800 text-sm">
+                                        <i class="fas fa-info-circle mr-1"></i> Hotel Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Activities -->
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold flex items-center">
+                                    <i class="fas fa-ticket-alt text-blue-600 mr-2"></i> Activities & Attractions
+                                </h4>
+                                <span class="font-bold text-blue-600">$120</span>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg shadow-sm p-4">
+                                <div class="space-y-4 mb-4">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <div class="font-medium">Sagrada Familia Skip-the-Line</div>
+                                            <div class="text-xs text-gray-500">Guided Tour, 1.5 hours</div>
+                                        </div>
+                                        <div class="font-medium">$30/person</div>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <div class="font-medium">Gothic Quarter Walking Tour</div>
+                                            <div class="text-xs text-gray-500">Group Tour, 3 hours</div>
+                                        </div>
+                                        <div class="font-medium">$25/person</div>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <div class="font-medium">Park Güell Entry</div>
+                                            <div class="text-xs text-gray-500">Skip-the-Line Ticket</div>
+                                        </div>
+                                        <div class="font-medium">$12/person</div>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <div class="font-medium">Barcelona Card (3-day)</div>
+                                            <div class="text-xs text-gray-500">Museum entries + public transport</div>
+                                        </div>
+                                        <div class="font-medium">$48/person</div>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <div class="font-medium">Tapas Cooking Class</div>
+                                            <div class="text-xs text-gray-500">3 hours, includes dinner</div>
+                                        </div>
+                                        <div class="font-medium">$65/person</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-between border-t pt-3">
+                                    <div class="font-medium">Total for 2 people</div>
+                                    <div class="font-medium">$360 (budgeted: $120)</div>
+                                </div>
+                                
+                                <div class="mt-4 bg-yellow-50 p-3 rounded text-sm">
+                                    <div class="font-medium mb-1">Note:</div>
+                                    <p>Budget shown ($120) includes only pre-paid activities. The full $360 represents all recommended activities.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Expert Recommendations -->
+        <section class="mb-16">
+            <div class="flex items-center mb-6">
+                <h2 class="text-2xl font-bold">Expert Local Recommendations</h2>
+                <span class="badge-premium ml-3">PREMIUM EXCLUSIVE</span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <img src="/api/placeholder/400/200" alt="Hidden Restaurant" class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">Hidden Gems</h3>
+                        <p class="text-gray-600 text-sm mb-4">Discover Barcelona's secret spots that most tourists never find.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <i class="fas fa-gem text-blue-600 mt-1 mr-2"></i>
+                                <div class="text-sm">
+                                    <span class="font-medium">Bunkers del Carmel</span>
+                                    <p class="text-gray-500">Abandoned anti-aircraft bunkers with the best panoramic views of Barcelona. Perfect for sunset.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-gem text-blue-600 mt-1 mr-2"></i>
+                                <div class="text-sm">
+                                    <span class="font-medium">Hospital de Sant Pau</span>
+                                    <p class="text-gray-500">Art Nouveau masterpiece that rivals Sagrada Familia in beauty but has a fraction of the visitors.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-gem text-blue-600 mt-1 mr-2"></i>
+                                <div class="text-sm">
+                                    <span class="font-medium">Passatge de la Pau</span>
+                                    <p class="text-gray-500">Hidden passageway with charming cafés and boutiques in the Gothic Quarter.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <img src="/api/placeholder/400/200" alt="Local Experiences" class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">Authentic Experiences</h3>
+                        <p class="text-gray-600 text-sm mb-4">Activities that will connect you with Barcelona's true culture.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <i class="fas fa-glass-cheers text-blue-600 mt-1 mr-2"></i>
+                                <div class="text-sm">
+                                    <span class="font-medium">Vermut Hour</span>
+                                    <p class="text-gray-500">Join locals for pre-lunch vermouth and tapas, especially on Sundays. Try Morro Fi or El Xampanyet.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-music text-blue-600 mt-1 mr-2"></i>
+                                <div class="text-sm">
+                                    <span class="font-medium">Flamenco at Tablao de Carmen</span>
+                                    <p class="text-gray-500">Intimate venue with authentic performances away from tourist circuits.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-shopping-basket text-blue-600 mt-1 mr-2"></i>
+                                <div class="text-sm">
+                                    <span class="font-medium">Mercat de Sant Antoni</span>
+                                    <p class="text-gray-500">Local market less crowded than La Boqueria. Sunday book market is a cultural institution.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Day Navigation -->
+        <section class="mb-16 print-page-break">
+            <h2 class="text-2xl font-bold mb-6">Your Full 7-Day Schedule</h2>
+            
+            <div class="bg-white rounded-xl shadow-md overflow-hidden p-6">
+                <div class="space-y-6">
+                    <!-- Day 1 -->
+                    <div class="flex items-start">
+                        <div class="w-24 flex-shrink-0">
+                            <div class="bg-blue-600 text-white rounded-lg p-2 text-center">
+                                <div class="text-sm">Day 1</div>
+                                <div class="font-bold">May 15</div>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="font-bold mb-2">Arrival & City Introduction</h3>
+                            <div class="space-y-1 text-sm text-gray-600">
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">8:45 AM</span>
+                                    <span>Flight arrives at El Prat Airport (BCN)</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">10:00 AM</span>
+                                    <span>Check-in at H10 Madison</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">1:00 PM</span>
+                                    <span>Lunch at El Nacional</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">3:00 PM</span>
+                                    <span>Gothic Quarter Walking Tour</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">7:30 PM</span>
+                                    <span>Dinner at Can Culleretes</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Day 2 -->
+                    <div class="flex items-start">
+                        <div class="w-24 flex-shrink-0">
+                            <div class="bg-gray-100 rounded-lg p-2 text-center">
+                                <div class="text-sm">Day 2</div>
+                                <div class="font-bold">May 16</div>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="font-bold mb-2">Gaudí Masterpieces</h3>
+                            <div class="space-y-1 text-sm text-gray-600">
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">9:00 AM</span>
+                                    <span>Sagrada Familia Tour (Skip-the-Line)</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">12:30 PM</span>
+                                    <span>Lunch at Enrique Tomás (Jamón specialist)</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">2:30 PM</span>
+                                    <span>Visit Casa Batlló</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">5:00 PM</span>
+                                    <span>Passeig de Gràcia Shopping</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">8:00 PM</span>
+                                    <span>Dinner at Ciudad Condal</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Day 3 -->
+                    <div class="flex items-start">
+                        <div class="w-24 flex-shrink-0">
+                            <div class="bg-gray-100 rounded-lg p-2 text-center">
+                                <div class="text-sm">Day 3</div>
+                                <div class="font-bold">May 17</div>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="font-bold mb-2">Park Güell & Culinary Experience</h3>
+                            <div class="space-y-1 text-sm text-gray-600">
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">9:30 AM</span>
+                                    <span>Park Güell Visit (Morning to avoid crowds)</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">12:00 PM</span>
+                                    <span>Lunch at La Paradeta (self-service seafood)</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">3:00 PM</span>
+                                    <span>Mercat de la Boqueria Food Market</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">5:30 PM</span>
+                                    <span>Tapas Cooking Class</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">8:30 PM</span>
+                                    <span>Dinner (included in cooking class)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Day 4 -->
+                    <div class="flex items-start">
+                        <div class="w-24 flex-shrink-0">
+                            <div class="bg-gray-100 rounded-lg p-2 text-center">
+                                <div class="text-sm">Day 4</div>
+                                <div class="font-bold">May 18</div>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="font-bold mb-2">Montjuïc & Culture</h3>
+                            <div class="space-y-1 text-sm text-gray-600">
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">10:00 AM</span>
+                                    <span>Cable Car to Montjuïc Castle</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">12:30 PM</span>
+                                    <span>Magic Fountain & National Palace</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">2:00 PM</span>
+                                    <span>Lunch at Xalet de Montjuïc</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">4:00 PM</span>
+                                    <span>Joan Miró Foundation</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">8:00 PM</span>
+                                    <span>Flamenco Show at Tablao de Carmen</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Day 5 -->
+                    <div class="flex items-start">
+                        <div class="w-24 flex-shrink-0">
+                            <div class="bg-gray-100 rounded-lg p-2 text-center">
+                                <div class="text-sm">Day 5</div>
+                                <div class="font-bold">May 19</div>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="font-bold mb-2">Beach Day & Barceloneta</h3>
+                            <div class="space-y-1 text-sm text-gray-600">
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">9:30 AM</span>
+                                    <span>Relaxing morning at Barceloneta Beach</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">1:00 PM</span>
+                                    <span>Seafood Lunch at La Cova Fumada</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">3:30 PM</span>
+                                    <span>Barcelona Aquarium</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">6:00 PM</span>
+                                    <span>Sunset Catamaran Cruise</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">9:00 PM</span>
+                                    <span>Dinner at 7 Portes (famous paella)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Day 6 -->
+                    <div class="flex items-start">
+                        <div class="w-24 flex-shrink-0">
+                            <div class="bg-gray-100 rounded-lg p-2 text-center">
+                                <div class="text-sm">Day 6</div>
+                                <div class="font-bold">May 20</div>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="font-bold mb-2">Montserrat Day Trip</h3>
+                            <div class="space-y-1 text-sm text-gray-600">
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">8:30 AM</span>
+                                    <span>Train to Montserrat (1 hour journey)</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">10:00 AM</span>
+                                    <span>Montserrat Monastery & Black Madonna</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">1:00 PM</span>
+                                    <span>Lunch at Restaurant Montserrat</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">2:30 PM</span>
+                                    <span>Hiking in Montserrat Natural Park</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">6:00 PM</span>
+                                    <span>Return to Barcelona</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">8:30 PM</span>
+                                    <span>Dinner at El Xampanyet (tapas bar)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Day 7 -->
+                    <div class="flex items-start">
+                        <div class="w-24 flex-shrink-0">
+                            <div class="bg-gray-100 rounded-lg p-2 text-center">
+                                <div class="text-sm">Day 7</div>
+                                <div class="font-bold">May 21</div>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="font-bold mb-2">Barcelona Highlights & Farewell</h3>
+                            <div class="space-y-1 text-sm text-gray-600">
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">9:00 AM</span>
+                                    <span>Visit Picasso Museum</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">12:00 PM</span>
+                                    <span>El Born Cultural Center & Santa Maria del Mar</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">1:30 PM</span>
+                                    <span>Lunch at Bar del Pla</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">3:30 PM</span>
+                                    <span>Shopping at Local Boutiques</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">7:00 PM</span>
+                                    <span>Sunset at Bunkers del Carmel</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">9:00 PM</span>
+                                    <span>Farewell Dinner at Disfrutar (2 Michelin stars)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Departure -->
+                    <div class="flex items-start">
+                        <div class="w-24 flex-shrink-0">
+                            <div class="bg-red-100 text-red-800 rounded-lg p-2 text-center">
+                                <div class="text-sm">Departure</div>
+                                <div class="font-bold">May 22</div>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="font-bold mb-2">Return Journey</h3>
+                            <div class="space-y-1 text-sm text-gray-600">
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">9:00 AM</span>
+                                    <span>Hotel Checkout</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">9:30 AM</span>
+                                    <span>Private Transfer to Airport</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">12:25 PM</span>
+                                    <span>Flight Departs for New York (JFK)</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">3:10 PM</span>
+                                    <span>Arrive in New York (JFK)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Emergency Information -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold mb-6">Emergency & Important Information</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-red-600 text-white p-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-phone-alt text-2xl mr-3"></i>
+                            <h3 class="text-lg font-bold">Emergency Contacts</h3>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="space-y-4">
+                            <div>
+                                <div class="font-bold mb-1">Emergency Services</div>
+                                <p class="text-sm text-gray-600"><span class="font-medium">112</span> - General Emergency (Police, Fire, Ambulance)</p>
+                            </div>
+                            
+                            <div>
+                                <div class="font-bold mb-1">US Embassy in Spain</div>
+                                <p class="text-sm text-gray-600">Calle Serrano, 75, 28006 Madrid</p>
+                                <p class="text-sm text-gray-600">Phone: +34 91 587 2200</p>
+                                <p class="text-sm text-gray-600">Emergency: +34 91 587 2200</p>
+                            </div>
+                            
+                            <div>
+                                <div class="font-bold mb-1">US Consulate in Barcelona</div>
+                                <p class="text-sm text-gray-600">Passeig Reina Elisenda de Montcada, 23</p>
+                                <p class="text-sm text-gray-600">Phone: +34 93 280 2227</p>
+                            </div>
+                            
+                            <div>
+                                <div class="font-bold mb-1">Nearest Hospital</div>
+                                <p class="text-sm text-gray-600">Hospital Clínic de Barcelona</p>
+                                <p class="text-sm text-gray-600">Carrer de Villarroel, 170</p>
+                                <p class="text-sm text-gray-600">Phone: +34 93 227 5400</p>
+                            </div>
+                            
+                            <div>
+                                <div class="font-bold mb-1">Your Hotel</div>
+                                <p class="text-sm text-gray-600">H10 Madison</p>
+                                <p class="text-sm text-gray-600">Plaça d'Antonio López, 6</p>
+                                <p class="text-sm text-gray-600">Phone: +34 93 169 6606</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-blue-600 text-white p-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-info-circle text-2xl mr-3"></i>
+                            <h3 class="text-lg font-bold">Travel Essentials</h3>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="space-y-4">
+                            <div>
+                                <div class="font-bold mb-1">Time Zone</div>
+                                <p class="text-sm text-gray-600">Central European Time (CET), GMT+1</p>
+                                <p class="text-sm text-gray-600">6 hours ahead of New York</p>
+                            </div>
+                            
+                            <div>
+                                <div class="font-bold mb-1">Electricity</div>
+                                <p class="text-sm text-gray-600">230V, 50Hz with European-style round pin plugs (Type C & F)</p>
+                                <p class="text-sm text-gray-600">Bring an adapter if needed</p>
+                            </div>
+                            
+                            <div>
+                                <div class="font-bold mb-1">WiFi Access</div>
+                                <p class="text-sm text-gray-600">Free WiFi at hotel and most cafés</p>
+                                <p class="text-sm text-gray-600">Consider a local SIM card for data (Orange, Vodafone, or Movistar shops)</p>
+                            </div>
+                            
+                            <div>
+                                <div class="font-bold mb-1">Health</div>
+                                <p class="text-sm text-gray-600">No special vaccinations required</p>
+                                <p class="text-sm text-gray-600">Pharmacies ("Farmacias") are plentiful and well-stocked</p>
+                            </div>
+                            
+                            <div>
+                                <div class="font-bold mb-1">Travel Insurance</div>
+                                <p class="text-sm text-gray-600">Policy #: TI-123456789</p>
+                                <p class="text-sm text-gray-600">24/7 Assistance: +1-800-123-4567</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Feedback Section -->
+        <section class="mb-16 no-print">
+            <div class="bg-blue-50 rounded-xl p-6">
+                <h2 class="text-2xl font-bold mb-4">How was your itinerary?</h2>
+                <p class="text-gray-600 mb-6">Your feedback helps us improve our service for future travelers.</p>
+                
+                <div class="flex space-x-2 mb-6">
+                    <button class="p-2 rounded-full hover:bg-blue-100">
+                        <i class="far fa-star text-2xl text-blue-600"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-blue-100">
+                        <i class="far fa-star text-2xl text-blue-600"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-blue-100">
+                        <i class="far fa-star text-2xl text-blue-600"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-blue-100">
+                        <i class="far fa-star text-2xl text-blue-600"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-blue-100">
+                        <i class="far fa-star text-2xl text-blue-600"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-6">
+                    <textarea class="w-full p-4 border border-gray-300 rounded-lg" rows="4" placeholder="Tell us what you thought about your itinerary..."></textarea>
+                </div>
+                
+                <div class="flex justify-end">
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                        Submit Feedback
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm pb-8 print-page-break">
+            <p>This itinerary was created exclusively for you by DreamAiTrip.</p>
+            <p class="mt-2">All bookings are subject to availability. Prices may vary.</p>
+            <p class="mt-4">© 2025 DreamAiTrip. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Interactive star rating
+            const stars = document.querySelectorAll('.fa-star');
+            stars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    stars.forEach((s, i) => {
+                        if (i <= index) {
+                            s.classList.remove('far');
+                            s.classList.add('fas');
+                        } else {
+                            s.classList.remove('fas');
+                            s.classList.add('far');
+                        }
+                    });
+                });
+            });
+            
+            // Day selector interactions
+            const dayButtons = document.querySelectorAll('.day-selector button');
+            dayButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    dayButtons.forEach(btn => {
+                        btn.classList.remove('bg-blue-600', 'text-white');
+                        btn.classList.add('bg-gray-100', 'hover:bg-gray-200');
+                    });
+                    button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                    button.classList.add('bg-blue-600', 'text-white');
+                });
+            });
+            
+            // Simulated map interaction
+            const mapOverlay = document.querySelector('.map-overlay');
+            if (mapOverlay) {
+                mapOverlay.addEventListener('click', () => {
+                    alert('Interactive map functionality would open here with all your destinations marked!');
+                });
+            }
+        });
+    </script>
+</body>
+</html> class="font-bold text-lg mb-2">Where Locals Eat</h3>
+                        <p class="text-gray-600 text-sm mb-4">Skip the tourist traps and dine where Barcelona residents go for authentic cuisine.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <i class="fas fa-utensils text-blue-600 mt-1 mr-2"></i>
+                                <div class="text-sm">
+                                    <span class="font-medium">Cal Pep</span>
+                                    <p class="text-gray-500">Tiny place with counter seating and the best seafood tapas in the city. No reservations, go early.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-utensils text-blue-600 mt-1 mr-2"></i>
+                                <div class="text-sm">
+                                    <span class="font-medium">La Cova Fumada</span>
+                                    <p class="text-gray-500">The birthplace of "la bomba" in Barceloneta. Family-run with no sign outside - a true hidden gem.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-utensils text-blue-600 mt-1 mr-2"></i>
+                                <div class="text-sm">
+                                    <span class="font-medium">Quimet & Quimet</span>
+                                    <p class="text-gray-500">Standing-room-only wine bar with gourmet montaditos (tiny sandwiches) in Poble Sec.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <img src="/api/placeholder/400/200" alt="Secret Spots" class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3
