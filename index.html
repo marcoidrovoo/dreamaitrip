@@ -84,6 +84,30 @@
             50% { transform: translate(0, 15px); }
             100% { transform: translate(0, 0px); }
         }
+
+        /* Loading indicator styles */
+        .loading-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            text-align: center;
+        }
+
+        .loading-indicator p {
+            background-color: var(--primary-blue);
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -91,7 +115,7 @@
     <nav class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <img src="/api/placeholder/120/40" alt="DreamAiTrip Logo" class="h-10">
+                <img src="https://via.placeholder.com/120x40" alt="DreamAiTrip Logo" class="h-10">
             </div>
             <div class="hidden md:flex space-x-6">
                 <a href="#features" class="text-gray-700 hover:text-blue-600 font-medium transition">Features</a>
@@ -448,7 +472,7 @@
                 <!-- Sample 1 -->
                 <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
                     <div class="relative">
-                        <img src="/api/placeholder/600/300" alt="Paris" class="w-full h-48 object-cover">
+                        <img src="https://via.placeholder.com/600x300" alt="Paris" class="w-full h-48 object-cover">
                         <div class="absolute top-3 right-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
                             FREE
                         </div>
@@ -472,7 +496,7 @@
                 <!-- Sample 2 -->
                 <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
                     <div class="relative">
-                        <img src="/api/placeholder/600/300" alt="Bali" class="w-full h-48 object-cover">
+                        <img src="https://via.placeholder.com/600x300" alt="Bali" class="w-full h-48 object-cover">
                         <div class="absolute top-3 right-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
                             FREE
                         </div>
@@ -496,7 +520,7 @@
                 <!-- Sample 3 -->
                 <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
                     <div class="relative">
-                        <img src="/api/placeholder/600/300" alt="Japan" class="w-full h-48 object-cover">
+                        <img src="https://via.placeholder.com/600x300" alt="Japan" class="w-full h-48 object-cover">
                         <div class="absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">
                             PREMIUM
                         </div>
@@ -524,6 +548,7 @@
     <section id="pricing" class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
+                <h2 class="text-3xl md:text
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Simple, Transparent Pricing</h2>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
                     Choose the plan that fits your travel needs
@@ -664,8 +689,6 @@
                     
                     <div class="md:w-2/3 p-8">
                         <form id="itinerary-form">
-                            <!-- form fields here -->
-                          </form>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
                                     <label class="block text-gray-700 font-medium mb-2" for="destination">Destination(s)</label>
@@ -711,15 +734,15 @@
                                 <label class="block text-gray-700 font-medium mb-2">Interests (Select all that apply)</label>
                                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                                     <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
-                                        <input type="checkbox" class="mr-2">
+                                        <input type="checkbox" name="interests" value="Culture & History" class="mr-2">
                                         <span>Culture & History</span>
                                     </label>
                                     <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
-                                        <input type="checkbox" class="mr-2">
+                                        <input type="checkbox" name="interests" value="Food & Dining" class="mr-2">
                                         <span>Food & Dining</span>
                                     </label>
                                     <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
-                                        <input type="checkbox" class="mr-2">
+                                        <input type="checkbox" name="interests" value="Adventure" class="mr-2">
                                         <span>Adventure</span>
                                     </label>
                                 </div>
@@ -747,56 +770,12 @@
         </div>
     </section>
     
-    <!-- Technical Details Section -->
-    <section class="py-16 bg-gray-900 text-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Powered by Advanced AI</h2>
-                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
-                    Our cutting-edge technology ensures your travel plans are optimized beyond what any human travel agent could achieve alone
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-gray-800 p-6 rounded-xl">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-brain text-blue-400 text-2xl mr-3"></i>
-                        <h3 class="text-xl font-bold">OpenAI Integration</h3>
-                    </div>
-                    <p class="text-gray-300">
-                        Utilizing OpenAI's advanced language models to generate personalized recommendations that truly match your desired experience.
-                    </p>
-                </div>
-                
-                <div class="bg-gray-800 p-6 rounded-xl">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-database text-blue-400 text-2xl mr-3"></i>
-                        <h3 class="text-xl font-bold">Real-time Data Analysis</h3>
-                    </div>
-                    <p class="text-gray-300">
-                        Our algorithms process thousands of data points in seconds, analyzing flight options, accommodation availability, and activity scheduling.
-                    </p>
-                </div>
-                
-                <div class="bg-gray-800 p-6 rounded-xl">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-code text-blue-400 text-2xl mr-3"></i>
-                        <h3 class="text-xl font-bold">Seamless API Integration</h3>
-                    </div>
-                    <p class="text-gray-300">
-                        Direct connections with hundreds of booking platforms enable our system to generate accurate pricing information with pre-filled booking parameters.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
     <!-- Footer -->
     <footer class="bg-gray-900 text-white py-12">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
-                    <img src="/api/placeholder/150/50" alt="DreamAiTrip Logo" class="h-10 mb-4">
+                    <img src="https://via.placeholder.com/150x50" alt="DreamAiTrip Logo" class="h-10 mb-4">
                     <p class="text-gray-400 mb-4">
                         Revolutionizing travel planning with AI technology that makes creating your dream trip effortless, detailed, and free.
                     </p>
@@ -854,29 +833,7 @@
     </footer>
 
     <!-- JavaScript -->
-    <script>
-        // Simple animation for elements as they come into view
-        document.addEventListener('DOMContentLoaded', function() {
-            const animateOnScroll = function() {
-                const elements = document.querySelectorAll('.feature-card');
-                
-                elements.forEach(element => {
-                    const elementPosition = element.getBoundingClientRect().top;
-                    const windowHeight = window.innerHeight;
-                    
-                    if (elementPosition < windowHeight - 100) {
-                        element.style.opacity = "1";
-                        element.style.transform = "translateY(0)";
-                    }
-                });
-            };
-            
-            window.addEventListener('scroll', animateOnScroll);
-            // Initial check
-            animateOnScroll();
-        });
-    </script>
     <script src="js/api.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
