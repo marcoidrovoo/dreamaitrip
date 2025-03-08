@@ -46,6 +46,45 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
+  // Check if we're on the itinerary page
+  if (window.location.href.includes('free-itinerary.html')) {
+    // Get the data from localStorage
+    const destination = localStorage.getItem('destination') || 'Barcelona';
+    const departure = localStorage.getItem('departure') || 'New York';
+    const departureDate = localStorage.getItem('departureDate') || '2025-05-15';
+    const returnDate = localStorage.getItem('returnDate') || '2025-05-22';
+    const generatedItinerary = localStorage.getItem('generatedItinerary');
+    
+    // Update the itinerary page with the user's data
+    document.querySelectorAll('.destination-placeholder').forEach(el => {
+      el.textContent = destination;
+    });
+    
+    document.querySelectorAll('.departure-placeholder').forEach(el => {
+      el.textContent = departure;
+    });
+    
+    const formattedDates = `${formatDate(departureDate)} to ${formatDate(returnDate)}`;
+    document.querySelectorAll('.dates-placeholder').forEach(el => {
+      el.textContent = formattedDates;
+    });
+    
+    // If we have a generated itinerary, display it
+    if (generatedItinerary) {
+      const itineraryContainer = document.getElementById('generated-itinerary-content');
+      if (itineraryContainer) {
+        itineraryContainer.innerHTML = formatItineraryText(generatedItinerary);
+      }
+    }
+  }
+  
+  // Helper function to format dates
+  function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  
   // Helper function to get selected interests
   function getSelectedInterests() {
     const interests = [];
@@ -53,5 +92,11 @@ document.addEventListener('DOMContentLoaded', function() {
       interests.push(el.value);
     });
     return interests.join(', ');
+  }
+  
+  // Helper function to format itinerary text with HTML
+  function formatItineraryText(text) {
+    // Convert line breaks to <br> and paragraphs to <p> tags
+    return text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
   }
 });
