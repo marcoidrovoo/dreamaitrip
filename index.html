@@ -91,7 +91,8 @@
     <nav class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <img src="https://dreamaitrip.onrender.com/api/placeholder/120/40" alt="DreamAiTrip Logo" class="h-10">            </div>
+                <img src="/api/placeholder/120/40" alt="DreamAiTrip Logo" class="h-10">
+            </div>
             <div class="hidden md:flex space-x-6">
                 <a href="#features" class="text-gray-700 hover:text-blue-600 font-medium transition">Features</a>
                 <a href="#how-it-works" class="text-gray-700 hover:text-blue-600 font-medium transition">How It Works</a>
@@ -447,7 +448,7 @@
                 <!-- Sample 1 -->
                 <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
                     <div class="relative">
-                        <img src="https://dreamaitrip.onrender.com/api/placeholder/600/300" alt="Paris" class="w-full h-48 object-cover">
+                        <img src="/api/placeholder/600/300" alt="Paris" class="w-full h-48 object-cover">
                         <div class="absolute top-3 right-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
                             FREE
                         </div>
@@ -471,7 +472,7 @@
                 <!-- Sample 2 -->
                 <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
                     <div class="relative">
-                        <img src="https://dreamaitrip.onrender.com/api/placeholder/600/300" alt="Bali" class="w-full h-48 object-cover">
+                        <img src="/api/placeholder/600/300" alt="Bali" class="w-full h-48 object-cover">
                         <div class="absolute top-3 right-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
                             FREE
                         </div>
@@ -495,7 +496,7 @@
                 <!-- Sample 3 -->
                 <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
                     <div class="relative">
-                        <img src="https://dreamaitrip.onrender.com/api/placeholder/600/300" alt="Japan" class="w-full h-48 object-cover">
+                        <img src="/api/placeholder/600/300" alt="Japan" class="w-full h-48 object-cover">
                         <div class="absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">
                             PREMIUM
                         </div>
@@ -662,7 +663,7 @@
                     </div>
                     
                     <div class="md:w-2/3 p-8">
-                        <form id="itinerary-form">
+                        <form>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
                                     <label class="block text-gray-700 font-medium mb-2" for="destination">Destination(s)</label>
@@ -708,24 +709,23 @@
                                 <label class="block text-gray-700 font-medium mb-2">Interests (Select all that apply)</label>
                                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                                     <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
-                                        <input type="checkbox" name="interests" class="mr-2" value="Culture & History">
+                                        <input type="checkbox" class="mr-2">
                                         <span>Culture & History</span>
                                     </label>
                                     <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
-                                        <input type="checkbox" name="interests" class="mr-2" value="Food & Dining">
+                                        <input type="checkbox" class="mr-2">
                                         <span>Food & Dining</span>
                                     </label>
                                     <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
-                                        <input type="checkbox" name="interests" class="mr-2" value="Adventure">
+                                        <input type="checkbox" class="mr-2">
                                         <span>Adventure</span>
                                     </label>
-                                    
                                 </div>
                             </div>
                             
                             <div class="mb-6">
                                 <label class="block text-gray-700 font-medium mb-2" for="additional">Additional Information</label>
-                                <textarea id="additional-info" rows="3" class="input-field w-full p-3" placeholder="Any specific requirements or preferences..."></textarea>
+                                <textarea id="additional" rows="3" class="input-field w-full p-3" placeholder="Any specific requirements or preferences..."></textarea>
                             </div>
                             
                             <div class="flex items-center mb-6">
@@ -739,8 +739,7 @@
                                 </button>
                             </div>
                         </form>
-                        <!-- Result container -->
-                            <div id="generated-itinerary-content"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -795,7 +794,7 @@
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
-                    <img src="https://dreamaitrip.onrender.com/api/placeholder/150/50" alt="DreamAiTrip Logo" class="h-10 mb-4">
+                    <img src="/api/placeholder/150/50" alt="DreamAiTrip Logo" class="h-10 mb-4">
                     <p class="text-gray-400 mb-4">
                         Revolutionizing travel planning with AI technology that makes creating your dream trip effortless, detailed, and free.
                     </p>
@@ -875,10 +874,5 @@
             animateOnScroll();
         });
     </script>
-    <!-- Add your JavaScript files -->
-    <script src="./js/api.js"></script>
-    <script src="./js/main.js"></script>
-    
-
 </body>
 </html>
