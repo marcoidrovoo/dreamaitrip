@@ -1,235 +1,880 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DreamAiTrip - AI-Powered Travel Itineraries</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <style>
-    :root {
-      --primary-blue: #0052cc;
-      --accent-yellow: #ffd700;
-      --secondary-blue: #bbdefb;
-    }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f8ff;
-    }
-    .btn-primary {
-      background-color: var(--primary-blue);
-      color: white;
-      transition: all 0.3s ease;
-    }
-    .btn-primary:hover {
-      background-color: #003d99;
-      transform: translateY(-2px);
-    }
-    .btn-secondary {
-      background-color: var(--accent-yellow);
-      color: #333;
-      transition: all 0.3s ease;
-    }
-    .btn-secondary:hover {
-      background-color: #e6c200;
-      transform: translateY(-2px);
-    }
-    .hero-section {
-      background: linear-gradient(135deg, var(--primary-blue) 0%, #1976d2 100%);
-      min-height: 70vh;
-      position: relative;
-    }
-    .gradient-text {
-      background: linear-gradient(90deg, var(--secondary-blue), var(--accent-yellow));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .feature-card {
-      transition: all 0.3s ease;
-      border-radius: 12px;
-      border: 1px solid #e0e0e0;
-    }
-    .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 82, 204, 0.15);
-    }
-    .input-field {
-      transition: all 0.3s ease;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-    }
-    .input-field:focus {
-      border-color: var(--primary-blue);
-      box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.2);
-    }
-    .floating {
-      animation: floating 3s ease-in-out infinite;
-    }
-    @keyframes floating {
-      0% {
-        transform: translate(0, 0px);
-      }
-      50% {
-        transform: translate(0, 15px);
-      }
-      100% {
-        transform: translate(0, 0px);
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamAiTrip - AI-Powered Travel Itineraries</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0052CC;
+            --secondary-blue: #BBDEFB;
+            --accent-yellow: #FFD700;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #003d99;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--accent-yellow);
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e6c200;
+            transform: translateY(-2px);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #1976D2 100%);
+            min-height: 70vh;
+            position: relative;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--secondary-blue), var(--accent-yellow));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 82, 204, 0.15);
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        
+        .input-field:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.2);
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translate(0, 0px); }
+            50% { transform: translate(0, 15px); }
+            100% { transform: translate(0, 0px); }
+        }
+    </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="bg-white shadow-md sticky top-0 z-50">
-    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center space-x-2">
-        <img src="/api/placeholder/120/40" alt="DreamAiTrip Logo" class="h-10" />
-      </div>
-      <div class="hidden md:flex space-x-6">
-        <a href="#features" class="text-gray-700 hover:text-blue-600 font-medium transition">Features</a>
-        <a href="#how-it-works" class="text-gray-700 hover:text-blue-600 font-medium transition">How It Works</a>
-        <a href="#samples" class="text-gray-700 hover:text-blue-600 font-medium transition">Samples</a>
-        <a href="#pricing" class="text-gray-700 hover:text-blue-600 font-medium transition">Pricing</a>
-        <a href="#get-started" class="text-gray-700 hover:text-blue-600 font-medium transition">Get Started</a>
-      </div>
-      <div class="flex items-center space-x-4">
-        <a href="#get-started" class="btn-primary px-5 py-2 rounded-full text-sm font-medium hover:shadow-lg">Create Itinerary</a>
-        <button class="md:hidden focus:outline-none">
-          <i class="fas fa-bars text-gray-700 text-xl"></i>
-        </button>
-      </div>
-    </div>
-  </nav>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <img src="/api/placeholder/120/40" alt="DreamAiTrip Logo" class="h-10">
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#features" class="text-gray-700 hover:text-blue-600 font-medium transition">Features</a>
+                <a href="#how-it-works" class="text-gray-700 hover:text-blue-600 font-medium transition">How It Works</a>
+                <a href="#samples" class="text-gray-700 hover:text-blue-600 font-medium transition">Samples</a>
+                <a href="#pricing" class="text-gray-700 hover:text-blue-600 font-medium transition">Pricing</a>
+                <a href="#get-started" class="text-gray-700 hover:text-blue-600 font-medium transition">Get Started</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="#get-started" class="btn-primary px-5 py-2 rounded-full text-sm font-medium hover:shadow-lg">Create Itinerary</a>
+                <button class="md:hidden focus:outline-none">
+                    <i class="fas fa-bars text-gray-700 text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-  <!-- Hero Section -->
-  <section class="hero-section text-white relative">
-    <div class="container mx-auto px-4 py-16 md:py-24 flex flex-col md:flex-row items-center justify-between relative z-10">
-      <div class="md:w-1/2 mb-10 md:mb-0">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-          Travel Planning <span class="gradient-text">Reimagined</span> with AI
-        </h1>
-        <p class="text-xl mb-8 text-blue-100">
-          Get instant, personalized travel itineraries powered by artificial intelligence. Perfect planning in seconds, complete with bookings, budgets, and local insights.
-        </p>
-        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-          <a href="#get-started" class="btn-secondary px-8 py-3 rounded-full text-lg font-bold text-center">Create Free Itinerary</a>
-          <a href="#samples" class="border-2 border-white px-8 py-3 rounded-full text-lg font-medium hover:bg-white hover:text-blue-700 transition text-center">View Samples</a>
+    <!-- Hero Section -->
+    <section class="hero-section text-white relative">
+        <div class="container mx-auto px-4 py-16 md:py-24 flex flex-col md:flex-row items-center justify-between relative z-10">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                    Travel Planning <span class="gradient-text">Reimagined</span> with AI
+                </h1>
+                <p class="text-xl mb-8 text-blue-100">
+                    Get instant, personalized travel itineraries powered by artificial intelligence. 
+                    Perfect planning in seconds, complete with bookings, budgets, and local insights.
+                </p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#get-started" class="btn-secondary px-8 py-3 rounded-full text-lg font-bold text-center">
+                        Create Free Itinerary
+                    </a>
+                    <a href="#samples" class="border-2 border-white px-8 py-3 rounded-full text-lg font-medium hover:bg-white hover:text-blue-700 transition text-center">
+                        View Samples
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-2/5 relative">
+                <div class="bg-white p-6 rounded-xl shadow-2xl floating">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+                            <i class="fas fa-plane-departure text-white"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-gray-800 font-bold">Tokyo Dream Trip</h3>
+                            <p class="text-gray-500 text-sm">7 Days • $2,400 • Cultural Experience</p>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-blue-50 rounded-lg">
+                            <div class="flex justify-between">
+                                <span class="text-gray-700 font-medium">Flight</span>
+                                <span class="text-blue-600 font-bold">$720</span>
+                            </div>
+                            <p class="text-gray-600 text-sm">United Airlines - Direct, 13h 20m</p>
+                        </div>
+                        <div class="p-3 bg-blue-50 rounded-lg">
+                            <div class="flex justify-between">
+                                <span class="text-gray-700 font-medium">Hotel</span>
+                                <span class="text-blue-600 font-bold">$920</span>
+                            </div>
+                            <p class="text-gray-600 text-sm">Grand Hyatt Tokyo - 6 nights</p>
+                        </div>
+                        <div class="p-3 bg-blue-50 rounded-lg">
+                            <div class="flex justify-between">
+                                <span class="text-gray-700 font-medium">Activities</span>
+                                <span class="text-blue-600 font-bold">$350</span>
+                            </div>
+                            <p class="text-gray-600 text-sm">5 tours, including Mt. Fuji day trip</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-xs text-gray-500">Created in 28 seconds</span>
+                        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            View Full Itinerary →
+                        </button>
+                    </div>
+                </div>
+                <div class="absolute -bottom-4 -right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg">
+                    <span class="text-sm font-bold">AI Generated</span>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="md:w-2/5 relative">
-        <div class="bg-white p-6 rounded-xl shadow-2xl floating">
-          <div class="flex items-center mb-4">
-            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
-              <i class="fas fa-plane-departure text-white"></i>
-            </div>
-            <div class="ml-3">
-              <h3 class="text-gray-800 font-bold">Tokyo Dream Trip</h3>
-              <p class="text-gray-500 text-sm">7 Days • $2,400 • Cultural Experience</p>
-            </div>
-          </div>
-          <div class="space-y-3">
-            <div class="p-3 bg-blue-50 rounded-lg">
-              <div class="flex justify-between">
-                <span class="text-gray-700 font-medium">Flight</span>
-                <span class="text-blue-600 font-bold">$720</span>
-              </div>
-              <p class="text-gray-600 text-sm">United Airlines - Direct, 13h 20m</p>
-            </div>
-            <div class="p-3 bg-blue-50 rounded-lg">
-              <div class="flex justify-between">
-                <span class="text-gray-700 font-medium">Hotel</span>
-                <span class="text-blue-600 font-bold">$920</span>
-              </div>
-              <p class="text-gray-600 text-sm">Grand Hyatt Tokyo - 6 nights</p>
-            </div>
-            <div class="p-3 bg-blue-50 rounded-lg">
-              <div class="flex justify-between">
-                <span class="text-gray-700 font-medium">Activities</span>
-                <span class="text-blue-600 font-bold">$350</span>
-              </div>
-              <p class="text-gray-600 text-sm">5 tours, including Mt. Fuji day trip</p>
-            </div>
-          </div>
-          <div class="mt-4 flex justify-between items-center">
-            <span class="text-xs text-gray-500">Created in 28 seconds</span>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">View Full Itinerary →</button>
-          </div>
+        
+        <!-- Wave divider -->
+        <div class="absolute bottom-0 left-0 right-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#f0f8ff" fill-opacity="1" d="M0,192L48,186.7C96,181,192,171,288,176C384,181,480,203,576,213.3C672,224,768,224,864,202.7C960,181,1056,139,1152,122.7C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
         </div>
-        <div class="absolute -bottom-4 -right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg">
-          <span class="text-sm font-bold">AI Generated</span>
-        </div>
-      </div>
-    </div>
-    <!-- Wave divider -->
-    <div class="absolute bottom-0 left-0 right-0">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-        <path fill="#f0f8ff" fill-opacity="1" d="M0,192L48,186.7C96,181,192,171,288,176C384,181,480,203,576,213.3C672,224,768,224,864,202.7C960,181,1056,139,1152,122.7C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-      </svg>
-    </div>
-  </section>
+    </section>
 
-  <!-- Get Started / Itinerary Form Section -->
-  <section id="get-started" class="py-16 bg-gray-100">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-bold mb-6 text-center">Plan Your Dream Trip</h2>
-      <form id="itinerary-form" class="bg-white p-8 rounded-lg shadow-md max-w-lg mx-auto">
-        <div class="mb-4">
-          <label for="destination" class="block text-gray-700">Destination:</label>
-          <input type="text" id="destination" placeholder="Enter your destination" required class="w-full p-2 border rounded" />
+    <!-- Features Section -->
+    <section id="features" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Why Choose DreamAiTrip?</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Our AI-powered platform creates comprehensive travel plans tailored to your preferences in seconds.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card bg-white p-6">
+                    <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                        <i class="fas fa-bolt text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Instant Itineraries</h3>
+                    <p class="text-gray-600">
+                        Generate comprehensive travel plans in seconds, not hours. Our AI analyzes thousands of options to find your perfect trip.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card bg-white p-6">
+                    <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                        <i class="fas fa-dollar-sign text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Detailed Budgeting</h3>
+                    <p class="text-gray-600">
+                        Every itinerary includes a comprehensive cost breakdown for flights, accommodations, activities, food, and miscellaneous expenses.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card bg-white p-6">
+                    <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                        <i class="fas fa-link text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Direct Booking Links</h3>
+                    <p class="text-gray-600">
+                        One-click access to book everything with your dates pre-selected. No more searching across multiple sites.
+                    </p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-card bg-white p-6">
+                    <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                        <i class="fas fa-map-marked-alt text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Local Insights</h3>
+                    <p class="text-gray-600">
+                        Discover insider tips on currency, weather, local cuisine, tipping customs, and hidden gems that only locals know about.
+                    </p>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="feature-card bg-white p-6">
+                    <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                        <i class="fas fa-sliders-h text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Fully Personalized</h3>
+                    <p class="text-gray-600">
+                        Every detail is tailored to your interests, whether you're a foodie, adventure seeker, history buff, or traveling with family.
+                    </p>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="feature-card bg-white p-6">
+                    <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                        <i class="fas fa-user-check text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Human Expert Option</h3>
+                    <p class="text-gray-600">
+                        Upgrade to our premium service for human travel experts who refine AI suggestions for truly exceptional journeys.
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="mb-4">
-          <label for="departure" class="block text-gray-700">Departure City:</label>
-          <input type="text" id="departure" placeholder="Your city" required class="w-full p-2 border rounded" />
-        </div>
-        <div class="mb-4">
-          <label for="departure-date" class="block text-gray-700">Departure Date:</label>
-          <input type="date" id="departure-date" required class="w-full p-2 border rounded" />
-        </div>
-        <div class="mb-4">
-          <label for="return-date" class="block text-gray-700">Return Date:</label>
-          <input type="date" id="return-date" required class="w-full p-2 border rounded" />
-        </div>
-        <div class="mb-4">
-          <label for="budget" class="block text-gray-700">Budget:</label>
-          <input type="text" id="budget" placeholder="e.g., $3000" required class="w-full p-2 border rounded" />
-        </div>
-        <div class="mb-4">
-          <label for="adults" class="block text-gray-700">Adults:</label>
-          <input type="number" id="adults" value="1" min="1" class="w-full p-2 border rounded" />
-        </div>
-        <div class="mb-4">
-          <label for="children" class="block text-gray-700">Children:</label>
-          <input type="number" id="children" value="0" min="0" class="w-full p-2 border rounded" />
-        </div>
-        <div class="mb-4">
-          <p class="block text-gray-700">Select Your Interests:</p>
-          <label class="inline-flex items-center">
-            <input type="checkbox" name="interests" value="Food & Wine" class="form-checkbox" />
-            <span class="ml-2">Food & Wine</span>
-          </label>
-          <label class="inline-flex items-center ml-4">
-            <input type="checkbox" name="interests" value="Culture" class="form-checkbox" />
-            <span class="ml-2">Culture</span>
-          </label>
-          <label class="inline-flex items-center ml-4">
-            <input type="checkbox" name="interests" value="Adventure" class="form-checkbox" />
-            <span class="ml-2">Adventure</span>
-          </label>
-        </div>
-        <div class="text-center">
-          <button type="submit" class="btn-primary px-6 py-2 rounded-full text-lg">Generate Itinerary</button>
-        </div>
-      </form>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
-  <footer class="bg-white py-4 text-center">
-    <p class="text-gray-600">&copy; 2025 DreamAiTrip. All rights reserved.</p>
-  </footer>
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Planning your dream trip is as easy as 1-2-3
+                </p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center mb-20">
+                <div class="md:w-2/5 mb-10 md:mb-0">
+                    <div class="relative">
+                        <div class="bg-white rounded-xl shadow-lg p-6 mb-4">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-medium mb-2">Where do you want to go?</label>
+                                <input type="text" class="input-field w-full p-3" placeholder="e.g., Tokyo, Japan" value="Barcelona, Spain">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-medium mb-2">What's your budget?</label>
+                                <input type="text" class="input-field w-full p-3" placeholder="e.g., $3000" value="$2500">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-medium mb-2">What are your interests?</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">Food & Wine</span>
+                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">Architecture</span>
+                                    <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">+ Add more</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg">
+                            <span class="text-sm font-bold">Step 1</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <h3 class="text-2xl font-bold mb-4">Share Your Travel Details</h3>
+                    <p class="text-gray-600 mb-6">
+                        Tell us where you want to go, when you're traveling, your budget, and what interests you. The more details you provide, the more personalized your itinerary will be.
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Specify your departure city for accurate flight options</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Include number of travelers, including children's ages</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Specify accommodation preferences (hotel, hostel, Airbnb)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row-reverse justify-between items-center mb-20">
+                <div class="md:w-2/5 mb-10 md:mb-0">
+                    <div class="relative">
+                        <div class="bg-white rounded-xl shadow-lg p-6 mb-4">
+                            <div class="text-center py-6">
+                                <div class="w-16 h-16 mx-auto mb-4 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                                <h4 class="text-lg font-bold mb-3">Creating Your Dream Trip</h4>
+                                <p class="text-gray-600 mb-4">Our AI is analyzing thousands of options...</p>
+                                <div class="h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-blue-600 w-3/4"></div>
+                                </div>
+                                <div class="flex justify-between text-sm text-gray-500">
+                                    <span>Finding best deals</span>
+                                    <span>75%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg">
+                            <span class="text-sm font-bold">Step 2</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <h3 class="text-2xl font-bold mb-4">Our AI Works Its Magic</h3>
+                    <p class="text-gray-600 mb-6">
+                        In just seconds, our advanced AI technology analyzes thousands of options to create a personalized itinerary that perfectly matches your preferences and budget.
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Evaluates flight options across multiple airlines</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Compares hundreds of accommodation options</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Selects activities based on your interests</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="md:w-2/5 mb-10 md:mb-0">
+                    <div class="relative">
+                        <div class="bg-white rounded-xl shadow-lg p-6 mb-4">
+                            <div class="mb-4 border-b pb-4">
+                                <h4 class="text-lg font-bold mb-2">Barcelona 7-Day Adventure</h4>
+                                <div class="flex items-center">
+                                    <span class="text-gray-600 text-sm">May 15-22, 2025</span>
+                                    <span class="mx-2">•</span>
+                                    <span class="text-green-600 font-medium">$2,410 total</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="flex items-center mb-2">
+                                    <i class="fas fa-plane-departure text-blue-600 w-6"></i>
+                                    <span class="font-medium">Flights</span>
+                                    <span class="ml-auto text-blue-600 font-bold">$820</span>
+                                </div>
+                                <p class="text-sm text-gray-600 ml-6">Delta Airlines, 1 stop</p>
+                                <a href="#" class="text-xs text-blue-600 hover:underline ml-6">Book now →</a>
+                            </div>
+                            <div class="mb-4">
+                                <div class="flex items-center mb-2">
+                                    <i class="fas fa-hotel text-blue-600 w-6"></i>
+                                    <span class="font-medium">Hotel</span>
+                                    <span class="ml-auto text-blue-600 font-bold">$980</span>
+                                </div>
+                                <p class="text-sm text-gray-600 ml-6">H10 Madison, 7 nights</p>
+                                <a href="#" class="text-xs text-blue-600 hover:underline ml-6">Book now →</a>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                                    Download PDF Itinerary
+                                </button>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg">
+                            <span class="text-sm font-bold">Step 3</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <h3 class="text-2xl font-bold mb-4">Receive Your Complete Itinerary</h3>
+                    <p class="text-gray-600 mb-6">
+                        Get a detailed day-by-day plan with everything you need to make your trip unforgettable.
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Comprehensive cost breakdown for transparency</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Pre-filtered direct booking links</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Local insights beyond typical guidebooks</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <script src="api.js"></script>
-  <script src="main.js"></script>
+    <!-- Sample Itineraries -->
+    <section id="samples" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Sample Itineraries</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Take a look at some of our AI-generated travel plans
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Sample 1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+                    <div class="relative">
+                        <img src="/api/placeholder/600/300" alt="Paris" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 right-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
+                            FREE
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Paris Getaway</h3>
+                        <div class="flex items-center mb-4">
+                            <span class="text-gray-600 text-sm">5 Days</span>
+                            <span class="mx-2">•</span>
+                            <span class="text-green-600 font-medium">$2,850</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            An intimate journey through the City of Love.
+                        </p>
+                        <a href="#" class="block text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                            View Full Itinerary
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Sample 2 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+                    <div class="relative">
+                        <img src="/api/placeholder/600/300" alt="Bali" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 right-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
+                            FREE
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Bali Adventure</h3>
+                        <div class="flex items-center mb-4">
+                            <span class="text-gray-600 text-sm">10 Days</span>
+                            <span class="mx-2">•</span>
+                            <span class="text-green-600 font-medium">$1,950</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            Explore beaches, rice terraces, and cultural temples.
+                        </p>
+                        <a href="#" class="block text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                            View Full Itinerary
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Sample 3 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+                    <div class="relative">
+                        <img src="/api/placeholder/600/300" alt="Japan" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">
+                            PREMIUM
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Japan Cultural Tour</h3>
+                        <div class="flex items-center mb-4">
+                            <span class="text-gray-600 text-sm">14 Days</span>
+                            <span class="mx-2">•</span>
+                            <span class="text-green-600 font-medium">$3,400</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            A comprehensive tour through Tokyo, Kyoto, and more.
+                        </p>
+                        <a href="#" class="block text-center bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">
+                            View Premium Itinerary
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Simple, Transparent Pricing</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Choose the plan that fits your travel needs
+                </p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row justify-center space-y-8 lg:space-y-0 lg:space-x-8">
+                <!-- Free Plan -->
+                <div class="bg-white rounded-xl shadow-md p-8 lg:w-1/3 hover:shadow-xl transition-shadow border-t-4 border-blue-500">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-4">Free Plan</h3>
+                        <div class="text-4xl font-bold mb-2">$0</div>
+                        <p class="text-gray-600">Forever Free</p>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Unlimited AI-generated itineraries</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Basic cost breakdown</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Standard booking links</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>PDF download</span>
+                        </li>
+                        <li class="flex items-start text-gray-400">
+                            <i class="fas fa-times mt-1 mr-2"></i>
+                            <span>Human expert refinement</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="text-center">
+                        <a href="#get-started" class="block w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-bold">
+                            Get Started
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Premium Plan -->
+                <div class="bg-white rounded-xl shadow-md p-8 lg:w-1/3 hover:shadow-xl transition-shadow border-t-4 border-yellow-500 relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-white px-4 py-1 rounded-full text-sm font-bold">
+                        MOST POPULAR
+                    </div>
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-4">Premium Plan</h3>
+                        <div class="text-4xl font-bold mb-2">$10</div>
+                        <p class="text-gray-600">Per Itinerary</p>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Everything in Free Plan</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Human expert refinement</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Detailed cost optimization</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>Premium direct booking links</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span>24/7 trip support</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="text-center">
+                        <a href="#get-started" class="block w-full bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition font-bold">
+                            Upgrade Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Get Started Form Section -->
+    <section id="get-started" class="py-16 bg-blue-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Create Your Dream Trip</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Fill in the details below and get your personalized itinerary in seconds
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="md:flex">
+                    <div class="md:w-1/3 bg-blue-600 text-white p-8">
+                        <h3 class="text-2xl font-bold mb-6">Let's Plan Your Adventure</h3>
+                        <p class="mb-8">Tell us your travel preferences and our AI will create your perfect itinerary.</p>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center mr-4">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Destinations</h4>
+                                    <p class="text-sm text-blue-200">Single or multiple cities</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center mr-4">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Travel Dates</h4>
+                                    <p class="text-sm text-blue-200">When you plan to travel</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center mr-4">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Budget</h4>
+                                    <p class="text-sm text-blue-200">How much you want to spend</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="md:w-2/3 p-8">
+                        <form>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2" for="destination">Destination(s)</label>
+                                    <input type="text" id="destination" class="input-field w-full p-3" placeholder="e.g., Tokyo, Japan">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2" for="departure">Departure City</label>
+                                    <input type="text" id="departure" class="input-field w-full p-3" placeholder="e.g., New York, USA">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2" for="departure-date">Departure Date</label>
+                                    <input type="date" id="departure-date" class="input-field w-full p-3">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2" for="return-date">Return Date</label>
+                                    <input type="date" id="return-date" class="input-field w-full p-3">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2" for="budget">Budget (USD)</label>
+                                    <input type="number" id="budget" class="input-field w-full p-3" placeholder="e.g., 3000">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Travelers</label>
+                                    <div class="flex space-x-4">
+                                        <div class="w-1/2">
+                                            <label class="block text-gray-600 text-sm mb-1" for="adults">Adults</label>
+                                            <input type="number" id="adults" min="1" value="1" class="input-field w-full p-3">
+                                        </div>
+                                        <div class="w-1/2">
+                                            <label class="block text-gray-600 text-sm mb-1" for="children">Children</label>
+                                            <input type="number" id="children" min="0" value="0" class="input-field w-full p-3">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-medium mb-2">Interests (Select all that apply)</label>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                    <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
+                                        <input type="checkbox" class="mr-2">
+                                        <span>Culture & History</span>
+                                    </label>
+                                    <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
+                                        <input type="checkbox" class="mr-2">
+                                        <span>Food & Dining</span>
+                                    </label>
+                                    <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50">
+                                        <input type="checkbox" class="mr-2">
+                                        <span>Adventure</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-medium mb-2" for="additional">Additional Information</label>
+                                <textarea id="additional" rows="3" class="input-field w-full p-3" placeholder="Any specific requirements or preferences..."></textarea>
+                            </div>
+                            
+                            <div class="flex items-center mb-6">
+                                <input type="checkbox" id="premium" class="mr-2">
+                                <label for="premium" class="text-gray-700">Upgrade to Premium ($10) for human expert refinement</label>
+                            </div>
+                            
+                            <div class="text-center">
+                                <button type="submit" class="btn-primary px-8 py-3 rounded-full text-lg font-bold">
+                                    Generate My Itinerary
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Technical Details Section -->
+    <section class="py-16 bg-gray-900 text-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Powered by Advanced AI</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Our cutting-edge technology ensures your travel plans are optimized beyond what any human travel agent could achieve alone
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-brain text-blue-400 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-bold">OpenAI Integration</h3>
+                    </div>
+                    <p class="text-gray-300">
+                        Utilizing OpenAI's advanced language models to generate personalized recommendations that truly match your desired experience.
+                    </p>
+                </div>
+                
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-database text-blue-400 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-bold">Real-time Data Analysis</h3>
+                    </div>
+                    <p class="text-gray-300">
+                        Our algorithms process thousands of data points in seconds, analyzing flight options, accommodation availability, and activity scheduling.
+                    </p>
+                </div>
+                
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-code text-blue-400 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-bold">Seamless API Integration</h3>
+                    </div>
+                    <p class="text-gray-300">
+                        Direct connections with hundreds of booking platforms enable our system to generate accurate pricing information with pre-filled booking parameters.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <img src="/api/placeholder/150/50" alt="DreamAiTrip Logo" class="h-10 mb-4">
+                    <p class="text-gray-400 mb-4">
+                        Revolutionizing travel planning with AI technology that makes creating your dream trip effortless, detailed, and free.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#features" class="text-gray-400 hover:text-white">Features</a></li>
+                        <li><a href="#how-it-works" class="text-gray-400 hover:text-white">How It Works</a></li>
+                        <li><a href="#samples" class="text-gray-400 hover:text-white">Sample Itineraries</a></li>
+                        <li><a href="#pricing" class="text-gray-400 hover:text-white">Pricing</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope text-blue-400 mt-1 mr-2"></i>
+                            <span>support@dreamaitrip.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-blue-400 mt-1 mr-2"></i>
+                            <span>123 AI Boulevard, San Francisco, CA 94103</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 DreamAiTrip. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Simple animation for elements as they come into view
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.feature-card');
+                
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (elementPosition < windowHeight - 100) {
+                        element.style.opacity = "1";
+                        element.style.transform = "translateY(0)";
+                    }
+                });
+            };
+            
+            window.addEventListener('scroll', animateOnScroll);
+            // Initial check
+            animateOnScroll();
+        });
+    </script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

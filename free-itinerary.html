@@ -673,6 +673,31 @@
 
     <!-- JavaScript -->
     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get stored data
+        const destination = localStorage.getItem('destination');
+        const departureCity = localStorage.getItem('departureCity');
+        const dates = localStorage.getItem('dates');
+        
+        // Update page with user data
+        if (destination) {
+          document.querySelectorAll('.destination-placeholder').forEach(el => {
+            el.textContent = destination;
+          });
+        }
+        
+        if (departureCity) {
+          document.querySelectorAll('.departure-placeholder').forEach(el => {
+            el.textContent = departureCity;
+          });
+        }
+        
+        if (dates) {
+          document.querySelectorAll('.dates-placeholder').forEach(el => {
+            el.textContent = dates;
+          });
+        }
+      });
         document.addEventListener('DOMContentLoaded', function() {
             // Day selector interactions
             const dayButtons = document.querySelectorAll('.day-selector button');
@@ -1039,5 +1064,11 @@
 
 <script src="api.js"></script>
 <script src="main.js"></script>
+<!-- AI Generated Itinerary Content -->
+<section class="mb-16">
+    <h2 class="text-2xl font-bold mb-6">Your AI-Generated Itinerary Details</h2>
+    
+    <div id="generated-itinerary-content" class="p-6 bg-white rounded-lg shadow-md"></div>
+</section>
 </body>
 </html>

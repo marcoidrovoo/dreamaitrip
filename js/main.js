@@ -1,102 +1,61 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if we're on the form page
     const itineraryForm = document.getElementById('itinerary-form');
     
     if (itineraryForm) {
       itineraryForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        // Show loading indicator
-        const loadingDiv = document.createElement('div');
-        loadingDiv.className = 'loading-indicator';
-        loadingDiv.innerHTML = '<p>Creating your personalized itinerary...</p>';
-        itineraryForm.appendChild(loadingDiv);
+        // Show loading spinner
+        document.getElementById('loading').style.display = 'block';
         
         // Get form data
-        const userInput = {
-          destination: document.getElementById('destination').value,
-          departure: document.getElementById('departure').value,
-          departureDate: document.getElementById('departure-date').value,
-          returnDate: document.getElementById('return-date').value,
-          budget: document.getElementById('budget').value,
-          adults: document.getElementById('adults').value || 1,
-          children: document.getElementById('children').value || 0,
-          interests: getSelectedInterests()
-        };
+        const destination = document.getElementById('destination').value;
+        const departure = document.getElementById('departure').value;
+        const departureDate = document.getElementById('departure-date').value;
+        const returnDate = document.getElementById('return-date').value;
+        const budget = document.getElementById('budget').value;
+        const adults = document.getElementById('adults').value;
+        const children = document.getElementById('children').value;
         
-        // Save basic data in localStorage
-        localStorage.setItem('destination', userInput.destination);
-        localStorage.setItem('departure', userInput.departure);
-        localStorage.setItem('departureDate', userInput.departureDate);
-        localStorage.setItem('returnDate', userInput.returnDate);
+        // Prepare input for OpenAI
+        const userInput = `Destination: ${destination}, Departure from: ${departure}, 
+                           Dates: ${departureDate} to ${returnDate}, Budget: $${budget}, 
+                           Travelers: ${adults} adults, ${children} children`;
         
-        try {
-          // Call API to generate itinerary
-          const itineraryText = await generateItinerary(userInput);
-          
-          // Store the result
-          localStorage.setItem('generatedItinerary', itineraryText);
-          
-          // Redirect to itinerary page
-          window.location.href = 'free-itinerary.html';
-        } catch (error) {
-          console.error('Error generating itinerary:', error);
-          loadingDiv.innerHTML = '<p>Sorry, there was an error generating your itinerary. Please try again.</p>';
-        }
+        // Call OpenAI API
+        const itineraryText = await generateItinerary(userInput);
+        
+        // For now, just redirect to the free itinerary template
+        localStorage.setItem('generatedItinerary', itineraryText);
+        window.location.href = 'free-itinerary.html';
       });
     }
+  });document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
     
-    // Check if we're on the itinerary page
-    if (window.location.href.includes('free-itinerary.html')) {
-      // Get the data from localStorage
-      const destination = localStorage.getItem('destination') || 'Barcelona';
-      const departure = localStorage.getItem('departure') || 'New York';
-      const departureDate = localStorage.getItem('departureDate') || '2025-05-15';
-      const returnDate = localStorage.getItem('returnDate') || '2025-05-22';
-      const generatedItinerary = localStorage.getItem('generatedItinerary');
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
       
-      // Update the itinerary page with the user's data
-      document.querySelectorAll('.destination-placeholder').forEach(el => {
-        el.textContent = destination;
-      });
+      // Show loading message
+      const loadingElement = document.createElement('div');
+      loadingElement.innerText = 'Generating your itinerary...';
+      form.appendChild(loadingElement);
       
-      document.querySelectorAll('.departure-placeholder').forEach(el => {
-        el.textContent = departure;
-      });
+      // Get form data
+      const destination = document.getElementById('destination').value;
+      const departureCity = document.getElementById('departure').value;
+      const departureDate = document.getElementById('departure-date').value;
+      const returnDate = document.getElementById('return-date').value;
       
-      const formattedDates = `${formatDate(departureDate)} to ${formatDate(returnDate)}`;
-      document.querySelectorAll('.dates-placeholder').forEach(el => {
-        el.textContent = formattedDates;
-      });
+      // Store the data to use in the itinerary page
+      localStorage.setItem('destination', destination);
+      localStorage.setItem('departureCity', departureCity);
+      localStorage.setItem('dates', `${departureDate} to ${returnDate}`);
       
-      // If we have a generated itinerary, display it
-      if (generatedItinerary) {
-        const itineraryContainer = document.getElementById('generated-itinerary-content');
-        if (itineraryContainer) {
-          itineraryContainer.innerHTML = formatItineraryText(generatedItinerary);
-        }
-      }
-    }
-    
-    // Helper function to format dates
-    function formatDate(dateString) {
-      if (!dateString) return '';
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    }
-    
-    // Helper function to get selected interests
-    function getSelectedInterests() {
-      const interests = [];
-      document.querySelectorAll('input[name="interests"]:checked').forEach(el => {
-        interests.push(el.value);
-      });
-      return interests.join(', ');
-    }
-    
-    // Helper function to format itinerary text with HTML
-    function formatItineraryText(text) {
-      // Convert line breaks to <br> and paragraphs to <p> tags
-      return text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
-    }
+      // Redirect to itinerary page - for demo purposes
+      // In a real implementation, you'd call the OpenAI API here
+      setTimeout(() => {
+        window.location.href = 'free-itinerary.html';
+      }, 2000);
+    });
   });
