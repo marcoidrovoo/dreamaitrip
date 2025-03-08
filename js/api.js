@@ -1,7 +1,7 @@
 async function generateItinerary(userInput) {
     try {
       // Replace with your actual backend URL when deployed
-      // For local testing, use http://localhost:3000/generate-itinerary
+      // For local testing, you might use: http://localhost:3000/generate-itinerary
       const response = await fetch('https://dreamaitrip.onrender.com/generate-itinerary', {
         method: 'POST',
         headers: {
@@ -20,3 +20,4 @@ async function generateItinerary(userInput) {
   
   // Make the function available globally
   window.generateItinerary = generateItinerary;
+  
