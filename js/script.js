@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (generatedItinerary) {
       const itineraryContainer = document.getElementById('generated-itinerary-content');
       if (itineraryContainer) {
-        itineraryContainer.innerHTML = formatItineraryText(generatedItinerary);
+        itineraryContainer.innerHTML = `<pre style="white-space: pre-wrap;">${generatedItinerary}</pre>`;
       }
     }
   }
