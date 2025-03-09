@@ -166,6 +166,72 @@
             overflow: hidden;
             position: relative;
         }
+
+        /* Itinerary content styling */
+        .itinerary-content {
+            white-space: pre-wrap;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .itinerary-content h1, 
+        .itinerary-content h2, 
+        .itinerary-content h3 {
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            font-weight: bold;
+        }
+
+        .itinerary-content h1 {
+            font-size: 1.8em;
+        }
+
+        .itinerary-content h2 {
+            font-size: 1.5em;
+        }
+
+        .itinerary-content h3 {
+            font-size: 1.3em;
+        }
+
+        .itinerary-content p {
+            margin-bottom: 1em;
+        }
+
+        .itinerary-content ul, 
+        .itinerary-content ol {
+            margin-left: 1.5em;
+            margin-bottom: 1em;
+        }
+
+        .itinerary-content li {
+            margin-bottom: 0.3em;
+        }
+
+        /* Loading indicator styles */
+        .loading-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            text-align: center;
+        }
+
+        .loading-indicator p {
+            background-color: var(--primary-blue);
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -173,7 +239,9 @@
     <nav class="bg-white shadow-md sticky top-0 z-50 no-print">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <img src="/api/placeholder/120/40" alt="DreamAiTrip Logo" class="h-10">
+                <a href="index.html">
+                    <img src="/api/placeholder/120/40" alt="DreamAiTrip Logo" class="h-10">
+                </a>
             </div>
             <div class="flex space-x-4">
                 <button class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100">
@@ -194,18 +262,57 @@
         <div class="container mx-auto px-4 relative z-10">
             <div class="mb-4">
                 <span class="badge-free mr-3">FREE ITINERARY</span>
-                <span class="text-sm opacity-80" id="creation-date">Created on <span id="created-date"></span></span>
+                <span class="text-sm opacity-80">Created on <span id="created-date"></span></span>
             </div>
-            <h1 class="text-3xl md:text-4xl font-bold mb-3" id="itinerary-title">Your Dream Adventure</h1>
-            <div class="flex flex-wrap gap-3 mb-5" id="itinerary-meta">
-                <!-- Trip metadata will be dynamically inserted here -->
-            </div>
-            <div class="text-xl md:text-2xl font-bold" id="total-budget">
-                Total Budget: <span id="budget-amount"></span>
+            <h1 class="text-3xl md:text-4xl font-bold mb-3 destination-placeholder">Your Dream Adventure</h1>
+            <div class="flex flex-wrap gap-3 mb-5">
+                <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm dates-placeholder"></span>
+                <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">From <span class="departure-placeholder"></span></span>
             </div>
             
-            <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4" id="summary-boxes">
-                <!-- Summary boxes will be dynamically inserted here -->
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 backdrop-filter backdrop-blur-sm">
+                    <div class="flex items-start">
+                        <i class="fas fa-plane-departure text-2xl mr-4 mt-1"></i>
+                        <div>
+                            <h3 class="font-bold mb-1">Flights</h3>
+                            <p class="text-sm">Check prices & availability</p>
+                            <a href="#" class="text-xs underline mt-1 inline-block hover:text-blue-200">Book now →</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 backdrop-filter backdrop-blur-sm">
+                    <div class="flex items-start">
+                        <i class="fas fa-hotel text-2xl mr-4 mt-1"></i>
+                        <div>
+                            <h3 class="font-bold mb-1">Accommodation</h3>
+                            <p class="text-sm">Find best hotels & rentals</p>
+                            <a href="#" class="text-xs underline mt-1 inline-block hover:text-blue-200">Book now →</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 backdrop-filter backdrop-blur-sm">
+                    <div class="flex items-start">
+                        <i class="fas fa-utensils text-2xl mr-4 mt-1"></i>
+                        <div>
+                            <h3 class="font-bold mb-1">Food & Dining</h3>
+                            <p class="text-sm">Local cuisine recommendations</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 backdrop-filter backdrop-blur-sm">
+                    <div class="flex items-start">
+                        <i class="fas fa-ticket-alt text-2xl mr-4 mt-1"></i>
+                        <div>
+                            <h3 class="font-bold mb-1">Activities</h3>
+                            <p class="text-sm">Must-see attractions & tours</p>
+                            <a href="#" class="text-xs underline mt-1 inline-block hover:text-blue-200">Book now →</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -233,44 +340,28 @@
             </div>
         </section>
         
-        <!-- Day Navigation -->
-        <section class="mb-8 no-print">
+        <!-- Itinerary Content -->
+        <section class="mb-16">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold mb-0">Your Itinerary</h2>
+                <h2 class="text-2xl font-bold">Your Itinerary</h2>
                 <div class="flex space-x-2">
-                    <button class="px-3 py-1 rounded-lg border border-gray-300 text-sm">
-                        <i class="fas fa-list mr-1"></i> List View
+                    <button class="px-3 py-1 rounded-lg border border-gray-300 text-sm" id="simple-view-btn">
+                        <i class="fas fa-list mr-1"></i> Simple View
                     </button>
-                    <button class="px-3 py-1 rounded-lg bg-blue-600 text-white text-sm">
-                        <i class="fas fa-calendar-alt mr-1"></i> Day View
+                    <button class="px-3 py-1 rounded-lg bg-blue-600 text-white text-sm" id="formatted-view-btn">
+                        <i class="fas fa-calendar-alt mr-1"></i> Enhanced View
                     </button>
                 </div>
             </div>
             
-            <div class="day-selector flex space-x-2 overflow-x-auto pb-4" id="day-selector">
-                <!-- Day buttons will be dynamically inserted here -->
+            <!-- Simple Text View (Default) -->
+            <div id="simple-itinerary-view" class="bg-white rounded-xl shadow-sm overflow-hidden p-6">
+                <div id="generated-itinerary-content" class="itinerary-content"></div>
             </div>
-        </section>
-        
-        <!-- Day Details Section -->
-        <div id="day-details-container">
-            <!-- Daily itinerary details will be dynamically inserted here -->
-        </div>
-        
-        <!-- Trip Overview -->
-        <section class="mb-16 print-page-break">
-            <h2 class="text-2xl font-bold mb-6">Your Schedule Overview</h2>
             
-            <div class="bg-white rounded-xl shadow-sm overflow-hidden p-6">
-                <div class="space-y-6" id="schedule-overview">
-                    <!-- Schedule overview will be dynamically inserted here -->
-                </div>
-                
-                <div class="mt-6 text-center">
-                    <button class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-bold" id="view-full-btn">
-                        View Full Day-by-Day Itinerary
-                    </button>
-                </div>
+            <!-- Enhanced View (Hidden initially) -->
+            <div id="enhanced-itinerary-view" class="hidden">
+                <!-- This will be populated by JavaScript based on the itinerary text -->
             </div>
         </section>
         
@@ -284,7 +375,25 @@
                 </div>
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="emergency-contacts">
-                        <!-- Emergency contacts will be dynamically inserted here based on the destination -->
+                        <div>
+                            <p class="font-bold mb-1">Emergency Services</p>
+                            <p class="text-sm text-gray-600"><span class="font-medium">112</span> - General Emergency (Europe)</p>
+                        </div>
+                        
+                        <div>
+                            <p class="font-bold mb-1">US Embassy</p>
+                            <p class="text-sm text-gray-600">Check travel.state.gov for contact information</p>
+                        </div>
+                        
+                        <div>
+                            <p class="font-bold mb-1">Hospital/Medical</p>
+                            <p class="text-sm text-gray-600">Search for nearest hospital on arrival</p>
+                        </div>
+                        
+                        <div>
+                            <p class="font-bold mb-1">Local Police</p>
+                            <p class="text-sm text-gray-600">Search for local police contact on arrival</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -296,34 +405,81 @@
             </div>
         </section>
         
-        <!-- Cost Breakdown -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold mb-6">Cost Breakdown</h2>
+        <!-- Local Tips & Essentials -->
+        <section class="mb-16">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold">Local Tips & Essential Information</h2>
+                <a href="#" class="text-blue-600 text-sm font-medium hover:underline">
+                    More details in Premium <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
             
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <div class="mb-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-bold">Total Trip Cost</h3>
-                        <span class="text-2xl font-bold text-blue-600" id="total-cost-display"></span>
-                    </div>
-                    <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div class="flex" id="cost-breakdown-bar">
-                            <!-- Cost breakdown bars will be dynamically inserted here -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Basic Travel Info -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        <i class="fas fa-info-circle text-blue-600 mr-2"></i> Travel Basics
+                    </h3>
+                    
+                    <div class="space-y-4" id="travel-basics">
+                        <div>
+                            <span class="font-medium block">Weather</span>
+                            <p class="text-sm text-gray-600">Check local forecast before your trip</p>
+                        </div>
+                        
+                        <div>
+                            <span class="font-medium block">Currency</span>
+                            <p class="text-sm text-gray-600">Research local currency and exchange rates</p>
+                        </div>
+                        
+                        <div>
+                            <span class="font-medium block">Language</span>
+                            <p class="text-sm text-gray-600">Learn a few basic phrases in the local language</p>
+                        </div>
+                        
+                        <div>
+                            <span class="font-medium block">Transportation</span>
+                            <p class="text-sm text-gray-600">Research local transportation options at your destination</p>
                         </div>
                     </div>
-                    <div class="flex text-xs text-gray-500 mt-1 justify-between" id="cost-breakdown-labels">
-                        <!-- Cost breakdown labels will be dynamically inserted here -->
-                    </div>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="cost-details">
-                    <!-- Cost details will be dynamically inserted here -->
-                </div>
-                
-                <div class="mt-6 text-center">
-                    <div class="bg-blue-50 p-4 rounded-lg inline-block">
-                        <p class="text-sm text-gray-600"><i class="fas fa-info-circle text-blue-600 mr-1"></i> Premium itineraries include detailed cost-saving recommendations and exclusive discounts.</p>
+                <!-- Local Tips -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        <i class="fas fa-lightbulb text-blue-600 mr-2"></i> Local Tips
+                    </h3>
+                    
+                    <div class="space-y-4" id="local-tips">
+                        <div>
+                            <span class="font-medium block">Local Customs</span>
+                            <p class="text-sm text-gray-600">Research local etiquette and customs before your trip</p>
+                        </div>
+                        
+                        <div>
+                            <span class="font-medium block">Safety</span>
+                            <p class="text-sm text-gray-600">Keep valuables secure and be aware of your surroundings</p>
+                        </div>
+                        
+                        <div>
+                            <span class="font-medium block">Tipping</span>
+                            <p class="text-sm text-gray-600">Check local tipping practices</p>
+                        </div>
+                        
+                        <div>
+                            <span class="font-medium block">Must-Try</span>
+                            <p class="text-sm text-gray-600">Research local specialties and cuisine</p>
+                        </div>
                     </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 text-center">
+                <div class="bg-blue-50 p-4 rounded-lg inline-block">
+                    <p class="text-sm text-gray-600 mb-2"><i class="fas fa-star text-yellow-400 mr-1"></i> Premium itineraries include detailed cultural insights, insider food recommendations, and money-saving tips.</p>
+                    <button class="text-blue-600 font-medium text-sm hover:underline">
+                        Upgrade to Premium <i class="fas fa-arrow-right ml-1"></i>
+                    </button>
                 </div>
             </div>
         </section>
@@ -360,49 +516,6 @@
             </div>
         </section>
         
-        <!-- Local Tips & Essentials -->
-        <section class="mb-16">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold">Local Tips & Essential Information</h2>
-                <a href="#" class="text-blue-600 text-sm font-medium hover:underline">
-                    More details in Premium <i class="fas fa-arrow-right ml-1"></i>
-                </a>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Basic Travel Info -->
-                <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h3 class="text-lg font-bold mb-4 flex items-center">
-                        <i class="fas fa-info-circle text-blue-600 mr-2"></i> Travel Basics
-                    </h3>
-                    
-                    <div class="space-y-4" id="travel-basics">
-                        <!-- Travel basics will be dynamically inserted here -->
-                    </div>
-                </div>
-                
-                <!-- Local Tips -->
-                <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h3 class="text-lg font-bold mb-4 flex items-center">
-                        <i class="fas fa-lightbulb text-blue-600 mr-2"></i> Local Tips
-                    </h3>
-                    
-                    <div class="space-y-4" id="local-tips">
-                        <!-- Local tips will be dynamically inserted here -->
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mt-6 text-center">
-                <div class="bg-blue-50 p-4 rounded-lg inline-block">
-                    <p class="text-sm text-gray-600 mb-2"><i class="fas fa-star text-yellow-400 mr-1"></i> Premium itineraries include detailed cultural insights, insider food recommendations, and money-saving tips.</p>
-                    <button class="text-blue-600 font-medium text-sm hover:underline">
-                        Upgrade to Premium <i class="fas fa-arrow-right ml-1"></i>
-                    </button>
-                </div>
-            </div>
-        </section>
-        
         <!-- Footer -->
         <footer class="text-center text-gray-500 text-sm pb-8 print-page-break">
             <p>This itinerary was created exclusively for you by DreamAiTrip.</p>
@@ -410,6 +523,9 @@
             <p class="mt-4">© <span id="current-year"></span> DreamAiTrip. All rights reserved.</p>
         </footer>
     </main>
+
+    <!-- Hidden element to maintain compatibility with existing JS -->
+    <div id="generated-itinerary-content-legacy" style="display:none;"></div>
 
     <!-- JavaScript -->
     <script>
@@ -419,265 +535,354 @@
             document.getElementById('created-date').textContent = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
             document.getElementById('current-year').textContent = now.getFullYear();
             
-            // Parse itinerary data from localStorage
-            let itineraryData;
-            try {
-                itineraryData = JSON.parse(localStorage.getItem('itineraryData'));
+            // Get the itinerary content from localStorage (compatible with your existing code)
+            const generatedItinerary = localStorage.getItem('generatedItinerary');
+            
+            if (generatedItinerary) {
+                // Display the itinerary in the simple view
+                displaySimpleItinerary(generatedItinerary);
                 
-                if (!itineraryData) {
-                    // For testing only - remove this in production
-                    console.warn('No itinerary data found in localStorage, using sample data');
-                    itineraryData = getSampleData();
-                }
-                
-                // Render the itinerary with the data
-                renderItinerary(itineraryData);
-            } catch (error) {
-                console.error('Error parsing itinerary data:', error);
-                document.body.innerHTML = `
-                    <div class="flex flex-col items-center justify-center min-h-screen p-4 text-center">
-                        <h1 class="text-2xl font-bold text-red-600 mb-4">Error Loading Itinerary</h1>
-                        <p class="mb-6">We couldn't load your itinerary data. Please try again or contact support.</p>
-                        <a href="index.html" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Return to Home</a>
+                // Attempt to parse and enhance the itinerary for the enhanced view
+                tryEnhanceItinerary(generatedItinerary);
+            } else {
+                // Handle missing itinerary
+                document.getElementById('generated-itinerary-content').innerHTML = `
+                    <div class="text-center p-8 text-gray-500">
+                        <i class="fas fa-exclamation-circle text-4xl mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">No Itinerary Found</h3>
+                        <p>We couldn't find your itinerary data. Please go back and generate a new itinerary.</p>
+                        <a href="index.html" class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Create New Itinerary</a>
                     </div>
                 `;
             }
             
-            // Day selector interactions
-            setupDaySelector();
+            // View toggle buttons
+            const simpleViewBtn = document.getElementById('simple-view-btn');
+            const formattedViewBtn = document.getElementById('formatted-view-btn');
+            const simpleView = document.getElementById('simple-itinerary-view');
+            const enhancedView = document.getElementById('enhanced-itinerary-view');
             
-            // View full itinerary button
-            document.getElementById('view-full-btn').addEventListener('click', function() {
-                // Show all days or scroll to day view
-                const firstDayBtn = document.querySelector('.day-selector button');
-                if (firstDayBtn) {
-                    firstDayBtn.click();
-                    document.getElementById('day-selector').scrollIntoView({ behavior: 'smooth' });
-                }
+            simpleViewBtn.addEventListener('click', function() {
+                simpleView.classList.remove('hidden');
+                enhancedView.classList.add('hidden');
+                simpleViewBtn.classList.add('bg-blue-600', 'text-white');
+                simpleViewBtn.classList.remove('border', 'border-gray-300', 'text-gray-700');
+                formattedViewBtn.classList.remove('bg-blue-600', 'text-white');
+                formattedViewBtn.classList.add('border', 'border-gray-300', 'text-gray-700');
+            });
+            
+            formattedViewBtn.addEventListener('click', function() {
+                simpleView.classList.add('hidden');
+                enhancedView.classList.remove('hidden');
+                formattedViewBtn.classList.add('bg-blue-600', 'text-white');
+                formattedViewBtn.classList.remove('border', 'border-gray-300', 'text-gray-700');
+                simpleViewBtn.classList.remove('bg-blue-600', 'text-white');
+                simpleViewBtn.classList.add('border', 'border-gray-300', 'text-gray-700');
             });
         });
         
-        function setupDaySelector() {
-            const dayButtons = document.querySelectorAll('.day-selector button');
-            dayButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    // Get the day number from the button's data attribute
-                    const dayNum = button.getAttribute('data-day');
-                    
-                    // Update active button state
-                    dayButtons.forEach(btn => {
-                        btn.classList.remove('bg-blue-600', 'text-white');
-                        btn.classList.add('bg-gray-100', 'hover:bg-gray-200');
-                    });
-                    button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
-                    button.classList.add('bg-blue-600', 'text-white');
-                    
-                    // Show the selected day's details
-                    const allDayDetails = document.querySelectorAll('.day-details');
-                    allDayDetails.forEach(detail => {
-                        detail.classList.add('hidden');
-                    });
-                    
-                    const selectedDay = document.getElementById(`day-${dayNum}-details`);
-                    if (selectedDay) {
-                        selectedDay.classList.remove('hidden');
-                    }
-                });
-            });
+        // Display the itinerary text as is
+        function displaySimpleItinerary(itineraryText) {
+            const container = document.getElementById('generated-itinerary-content');
             
-            // Auto-select the first day
-            if (dayButtons.length > 0) {
-                dayButtons[0].click();
-            }
+            // Also update the hidden element for compatibility with existing code
+            const legacyContainer = document.getElementById('generated-itinerary-content-legacy');
+            
+            // Format the text to handle markdown-style formatting
+            let formattedText = itineraryText;
+            
+            // Convert markdown headings to styled headings
+            formattedText = formattedText.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            formattedText = formattedText.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            formattedText = formattedText.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+            
+            // Convert **bold** text
+            formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Convert lists
+            formattedText = formattedText.replace(/^\s*[-*+]\s+(.*$)/gm, '<li>$1</li>');
+            
+            // Wrap the content
+            container.innerHTML = formattedText;
+            legacyContainer.innerHTML = `<pre style="white-space: pre-wrap;">${itineraryText}</pre>`;
         }
         
-        function renderItinerary(data) {
-            // Set page title
-            document.title = `DreamAiTrip - ${data.title || 'Your Dream Itinerary'}`;
+        // Try to enhance the itinerary by parsing it
+        function tryEnhanceItinerary(itineraryText) {
+            const enhancedView = document.getElementById('enhanced-itinerary-view');
             
-            // Set itinerary title
-            document.getElementById('itinerary-title').textContent = data.title || 'Your Dream Adventure';
-            
-            // Set metadata
-            renderMetadata(data);
-            
-            // Set budget
-            if (data.budget) {
-                document.getElementById('budget-amount').textContent = formatCurrency(data.budget);
-            } else {
-                document.getElementById('total-budget').style.display = 'none';
-            }
-            
-            // Render summary boxes
-            renderSummaryBoxes(data);
-            
-            // Render day selector and day details
-            renderDays(data);
-            
-            // Render schedule overview
-            renderScheduleOverview(data);
-            
-            // Render emergency contacts
-            renderEmergencyContacts(data.destination);
-            
-            // Render cost breakdown
-            renderCostBreakdown(data);
-            
-            // Render travel basics and local tips
-            renderTravelInfo(data.destination);
-        }
-        
-        function renderMetadata(data) {
-            const metaContainer = document.getElementById('itinerary-meta');
-            metaContainer.innerHTML = '';
-            
-            // Duration
-            if (data.duration) {
-                const durationSpan = document.createElement('span');
-                durationSpan.className = 'bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm';
-                durationSpan.textContent = `${data.duration} Days`;
-                metaContainer.appendChild(durationSpan);
-            }
-            
-            // Dates
-            if (data.startDate && data.endDate) {
-                const datesSpan = document.createElement('span');
-                datesSpan.className = 'bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm';
-                datesSpan.textContent = `${formatDate(data.startDate)}-${formatDate(data.endDate)}`;
-                metaContainer.appendChild(datesSpan);
-            }
-            
-            // Travelers
-            if (data.travelers) {
-                const travelersSpan = document.createElement('span');
-                travelersSpan.className = 'bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm';
-                travelersSpan.textContent = formatTravelers(data.travelers);
-                metaContainer.appendChild(travelersSpan);
-            }
-            
-            // Origin
-            if (data.origin) {
-                const originSpan = document.createElement('span');
-                originSpan.className = 'bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm';
-                originSpan.textContent = `From ${data.origin}`;
-                metaContainer.appendChild(originSpan);
-            }
-        }
-        
-        function renderSummaryBoxes(data) {
-            const summaryContainer = document.getElementById('summary-boxes');
-            summaryContainer.innerHTML = '';
-            
-            // Define summary box types and their icons
-            const summaryTypes = [
-                { key: 'flights', icon: 'plane-departure', title: 'Flights' },
-                { key: 'accommodation', icon: 'hotel', title: 'Accommodation' },
-                { key: 'food', icon: 'utensils', title: 'Food & Dining' },
-                { key: 'activities', icon: 'ticket-alt', title: 'Activities' }
-            ];
-            
-            // Create summary boxes
-            summaryTypes.forEach(type => {
-                if (data[type.key]) {
-                    const summaryBox = document.createElement('div');
-                    summaryBox.className = 'bg-white bg-opacity-20 rounded-lg p-4 backdrop-filter backdrop-blur-sm';
+            try {
+                // Simple parsing of the itinerary text to identify sections
+                const lines = itineraryText.split('\n');
+                let destination = 'Your Destination';
+                let budget = '';
+                let dayHeadings = [];
+                
+                // Extract basic information
+                for (let i = 0; i < Math.min(20, lines.length); i++) {
+                    const line = lines[i];
                     
-                    let description = '';
-                    let price = '';
-                    
-                    if (typeof data[type.key] === 'object') {
-                        description = data[type.key].description || '';
-                        price = data[type.key].cost || '';
-                    } else {
-                        price = data[type.key];
+                    // Try to find the title/destination
+                    if (line.includes('Itinerary:') || line.includes('Travel Itinerary:')) {
+                        const parts = line.split(':');
+                        if (parts.length > 1) {
+                            destination = parts[1].trim();
+                        }
                     }
                     
-                    summaryBox.innerHTML = `
-                        <div class="flex items-start">
-                            <i class="fas fa-${type.icon} text-2xl mr-4 mt-1"></i>
-                            <div>
-                                <h3 class="font-bold mb-1">${type.title}</h3>
-                                <p class="text-sm">${description}</p>
-                                <p class="font-bold mt-2">${formatCurrency(price)}</p>
-                                ${type.key !== 'food' ? '<a href="#" class="text-xs underline mt-1 inline-block hover:text-blue-200">Book now →</a>' : ''}
+                    // Try to find budget
+                    if (line.includes('**Budget:**')) {
+                        budget = line.split('**Budget:**')[1].trim();
+                    }
+                }
+                
+                // Find day sections
+                const dayRegex = /^(Day \d+|####\s+Day \d+):/i;
+                for (let i = 0; i < lines.length; i++) {
+                    if (dayRegex.test(lines[i])) {
+                        dayHeadings.push({
+                            index: i,
+                            title: lines[i].trim()
+                        });
+                    }
+                }
+                
+                // Create enhanced view HTML
+                let enhancedHTML = '';
+                
+                // If we found day headings, create a day-by-day view
+                if (dayHeadings.length > 0) {
+                    // Create day selector
+                    enhancedHTML += `
+                        <div class="day-selector flex space-x-2 overflow-x-auto pb-4 mb-6">
+                    `;
+                    
+                    dayHeadings.forEach((day, index) => {
+                        const isFirst = index === 0;
+                        const dayNumber = day.title.match(/\d+/)[0];
+                        
+                        enhancedHTML += `
+                            <button class="enhanced-day-btn flex flex-col items-center justify-center ${isFirst ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200'} rounded-lg py-2 px-4 min-w-[80px]" data-day="${index}">
+                                <span class="text-xs">Day</span>
+                                <span class="font-bold">${dayNumber}</span>
+                            </button>
+                        `;
+                    });
+                    
+                    enhancedHTML += `</div>`;
+                    
+                    // Create day content sections
+                    enhancedHTML += `<div class="enhanced-days-container">`;
+                    
+                    dayHeadings.forEach((day, index) => {
+                        const isFirst = index === 0;
+                        const nextDayIndex = (index < dayHeadings.length - 1) ? dayHeadings[index + 1].index : lines.length;
+                        const dayContent = lines.slice(day.index, nextDayIndex).join('\n');
+                        
+                        // Extract day title and activities
+                        const dayTitle = day.title.replace(/^####\s+/, '').trim();
+                        const activities = extractActivities(dayContent);
+                        
+                        enhancedHTML += `
+                            <div class="day-details ${isFirst ? '' : 'hidden'}" data-day-content="${index}">
+                                <div class="flex items-center mb-6">
+                                    <h2 class="text-2xl font-bold">${dayTitle}</h2>
+                                </div>
+                                
+                                <div class="day-card bg-white overflow-hidden">
+                                    <div class="p-6">
+                                        <div class="space-y-8">
+                        `;
+                        
+                        // Add activities
+                        activities.forEach((activity, actIndex) => {
+                            const isLastActivity = actIndex === activities.length - 1;
+                            
+                            enhancedHTML += `
+                                <div class="flex">
+                                    <div class="timeline-point ${isLastActivity ? 'timeline-point-last' : ''}"></div>
+                                    <div class="w-full">
+                                        <div class="activity-card p-4">
+                                            <div class="flex items-start">
+                                                <div>
+                                                    <h4 class="font-bold mb-1">${activity.title}</h4>
+                                                    ${activity.description ? `<p class="text-gray-600 text-sm mb-3">${activity.description}</p>` : ''}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        
+                        enhancedHTML += `
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    enhancedHTML += `</div>`;
+                } else {
+                    // If we couldn't parse days, just format the content nicely
+                    enhancedHTML = `
+                        <div class="bg-white rounded-xl shadow-sm overflow-hidden p-6">
+                            <div class="itinerary-content">
+                                ${formatItineraryContent(itineraryText)}
                             </div>
                         </div>
                     `;
-                    
-                    summaryContainer.appendChild(summaryBox);
-                }
-            });
-        }
-        
-        function renderDays(data) {
-            const daySelectorContainer = document.getElementById('day-selector');
-            const dayDetailsContainer = document.getElementById('day-details-container');
-            
-            daySelectorContainer.innerHTML = '';
-            dayDetailsContainer.innerHTML = '';
-            
-            // Return if no days data
-            if (!data.days || !Array.isArray(data.days) || data.days.length === 0) {
-                return;
-            }
-            
-            // Create day buttons and detail sections
-            data.days.forEach((day, index) => {
-                const dayNum = index + 1;
-                const isFirstDay = index === 0;
-                
-                // Create day button
-                const dayButton = document.createElement('button');
-                dayButton.className = `flex flex-col items-center justify-center ${isFirstDay ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200'} rounded-lg py-2 px-4 min-w-[80px]`;
-                dayButton.setAttribute('data-day', dayNum);
-                
-                // Parse date if it's a string
-                let dayDate = day.date;
-                if (typeof dayDate === 'string') {
-                    try {
-                        dayDate = new Date(dayDate);
-                    } catch (e) {
-                        console.error('Error parsing date:', e);
-                    }
                 }
                 
-                const formattedDate = dayDate instanceof Date ? formatDate(dayDate, true) : '';
+                // Add the enhanced HTML to the view
+                enhancedView.innerHTML = enhancedHTML;
                 
-                dayButton.innerHTML = `
-                    <span class="text-xs">Day ${dayNum}</span>
-                    <span class="font-bold">${formattedDate}</span>
-                `;
-                daySelectorContainer.appendChild(dayButton);
-                
-                // Create day details section
-                const dayDetails = document.createElement('section');
-                dayDetails.className = `mb-16 day-details ${isFirstDay ? '' : 'hidden'}`;
-                dayDetails.id = `day-${dayNum}-details`;
-                
-                dayDetails.innerHTML = `
-                    <div class="flex items-center mb-6">
-                        <h2 class="text-2xl font-bold">Day ${dayNum}: ${day.title || 'Itinerary'}</h2>
-                        <span class="ml-auto text-sm text-gray-500">${formattedDate}</span>
-                    </div>
-                    
-                    <div class="day-card bg-white overflow-hidden">
-                        <div class="p-6">
-                            ${renderDayActivities(day.activities || [])}
+                // Add event listeners to day buttons
+                const dayButtons = document.querySelectorAll('.enhanced-day-btn');
+                dayButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const dayIndex = this.getAttribute('data-day');
+                        
+                        // Update active button
+                        dayButtons.forEach(btn => {
+                            btn.classList.remove('bg-blue-600', 'text-white');
+                            btn.classList.add('bg-gray-100', 'hover:bg-gray-200');
+                        });
+                        this.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                        this.classList.add('bg-blue-600', 'text-white');
+                        
+                        // Show selected day
+                        const dayContents = document.querySelectorAll('.day-details');
+                        dayContents.forEach(content => {
+                            content.classList.add('hidden');
+                        });
+                        document.querySelector(`[data-day-content="${dayIndex}"]`).classList.remove('hidden');
+                    });
+                });
+            } catch (error) {
+                console.error('Error enhancing itinerary:', error);
+                // Fallback to simple formatting
+                enhancedView.innerHTML = `
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden p-6">
+                        <div class="itinerary-content">
+                            ${formatItineraryContent(itineraryText)}
                         </div>
                     </div>
                 `;
-                
-                dayDetailsContainer.appendChild(dayDetails);
-            });
+            }
+        }
+        
+        // Helper function to extract activities from a day's content
+        function extractActivities(dayContent) {
+            const activities = [];
+            const lines = dayContent.split('\n');
             
-            // Add departure day if it exists
-            if (data.departure) {
-                const departureBtn = document.createElement('button');
-                departureBtn.className = 'flex flex-col items-center justify-center bg-gray-100 hover:bg-gray-200 rounde
-                <div id="generated-itinerary-content" style="display:none;"></div>
- <!-- Include external JavaScript files if needed -->
- <script src="./js/api.js"></script>
- <script src="./js/script.js"></script>
- 
+            // Skip the first line (day title)
+            let i = 1;
+            
+            while (i < lines.length) {
+                let line = lines[i].trim();
+                
+                // Look for activity headings (bullet points, numbers, or activity keywords)
+                if (line.startsWith('- ') || line.startsWith('* ') || /^\d+\./.test(line) || 
+                    line.includes('Visit') || line.includes('Explore') || line.includes('Tour') || 
+                    line.includes('Check') || line.includes('Enjoy') || line.includes('Experience')) {
+                    
+                    // Found an activity
+                    const title = line.replace(/^[-*]\s+/, '').replace(/^\d+\.\s+/, '');
+                    let description = '';
+                    let j = i + 1;
+                    
+                    // Look for description in the next lines (indented or not a new activity)
+                    while (j < lines.length) {
+                        const nextLine = lines[j].trim();
+                        if (nextLine.startsWith('- ') || nextLine.startsWith('* ') || /^\d+\./.test(nextLine) ||
+                            nextLine.length === 0 || nextLine.startsWith('#')) {
+                            // This is a new activity or section, stop here
+                            break;
+                        }
+                        
+                        // Add this line to the description
+                        if (description) description += ' ';
+                        description += nextLine;
+                        j++;
+                    }
+                    
+                    activities.push({
+                        title: title,
+                        description: description
+                    });
+                    
+                    // Move to the next line after the description
+                    i = j;
+                } else {
+                    // Not an activity, move to next line
+                    i++;
+                }
+            }
+            
+            return activities;
+        }
+        
+        // Format itinerary content with HTML
+        function formatItineraryContent(text) {
+            // Convert markdown headings to styled headings
+            let formatted = text.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            formatted = formatted.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            formatted = formatted.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+            formatted = formatted.replace(/^#### (.*$)/gm, '<h3>$1</h3>');
+            
+            // Convert **bold** text
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Convert bullet lists
+            let inList = false;
+            const lines = formatted.split('\n');
+            let result = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                
+                if (line.trim().startsWith('- ') || line.trim().startsWith('* ')) {
+                    if (!inList) {
+                        result.push('<ul>');
+                        inList = true;
+                    }
+                    
+                    result.push(`<li>${line.trim().substring(2)}</li>`);
+                } else if (line.trim().match(/^\d+\.\s/)) {
+                    if (!inList) {
+                        result.push('<ol>');
+                        inList = true;
+                    }
+                    
+                    result.push(`<li>${line.trim().replace(/^\d+\.\s/, '')}</li>`);
+                } else {
+                    if (inList) {
+                        result.push(inList === true ? '</ul>' : '</ol>');
+                        inList = false;
+                    }
+                    
+                    // Add line breaks for empty lines
+                    if (line.trim() === '') {
+                        result.push('<br>');
+                    } else {
+                        result.push(line);
+                    }
+                }
+            }
+            
+            if (inList) {
+                result.push(inList === true ? '</ul>' : '</ol>');
+            }
+            
+            return result.join('\n');
+        }
+    </script>
+    
+    <!-- Include your existing scripts for compatibility -->
+    <script src="./js/api.js"></script>
+    <script src="./js/script.js"></script>
 </body>
 </html>
