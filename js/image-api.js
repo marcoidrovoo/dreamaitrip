@@ -12,8 +12,7 @@ async function fetchDestinationImages(destination, count = 8) {
     
     try {
       // Use your server as a proxy instead of calling Unsplash directly
-      const response = await fetch(`/api/unsplash/${encodeURIComponent(destination)}`);
-      
+      const response = await fetch(`https://dreamaitrip.onrender.com/api/unsplash/${encodeURIComponent(destination)}`);      
       if (!response.ok) throw new Error('Failed to fetch images');
       
       const data = await response.json();
