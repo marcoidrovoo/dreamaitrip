@@ -2,6 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { OpenAI } = require('openai');
+// Add these new imports
+const path = require('path');
+const fs = require('fs');
+
+// Add this for fetch API
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 // Load environment variables
 dotenv.config();
@@ -15,6 +21,9 @@ app.use(express.json());
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+// Serve static files
+app.use(express.static('./'));
 
 // Create API endpoint for generating itineraries
 app.post('/generate-itinerary', async (req, res) => {
@@ -42,6 +51,53 @@ Include daily activities, recommended accommodations, and approximate costs.`;
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Failed to generate itinerary' });
+  }
+});
+
+// New endpoint for Unsplash images
+app.get('/api/unsplash-images', async (req, res) => {
+  try {
+    const destination = req.query.destination;
+    const count = req.query.count || 8;
+    
+    if (!destination) {
+      return res.status(400).json({ error: 'Destination is required' });
+    }
+    
+    // Clean up the destination for better search results
+    const searchTerm = destination.split(',')[0].trim();
+    
+    // Make request to Unsplash API
+    const response = await fetch(
+      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(searchTerm)}&per_page=${count}&orientation=landscape`,
+      {
+        headers: {
+          'Authorization': `Client-ID ${process.env.UNSPLASH_API_KEY}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch images from Unsplash');
+    }
+
+    const data = await response.json();
+    
+    // Format the response
+    const images = data.results.map(image => ({
+      url: image.urls.regular,
+      thumb: image.urls.small,
+      alt: image.alt_description || `Photo of ${destination}`,
+      credit: {
+        name: image.user.name,
+        link: image.user.links.html
+      }
+    }));
+    
+    res.json({ images });
+  } catch (error) {
+    console.error('Error fetching Unsplash images:', error);
+    res.status(500).json({ error: 'Failed to fetch images' });
   }
 });
 
