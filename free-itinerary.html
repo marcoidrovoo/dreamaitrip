@@ -120,6 +120,17 @@
             border-radius: 8px;
         }
         
+        /* Gallery Styling */
+        .gallery-photo {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .gallery-photo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
         /* Print Styles */
         @media print {
             .no-print {
@@ -337,6 +348,26 @@
             </div>
             <div class="text-center mt-2 text-sm text-gray-500">
                 <p>Interactive map available in Premium version</p>
+            </div>
+        </section>
+        
+        <!-- Photos of Destination -->
+        <section class="mb-12">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold">Photos of <span class="destination-placeholder">Your Destination</span></h2>
+            </div>
+            
+            <div id="photo-gallery" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- Images will be dynamically loaded here -->
+                <div class="gallery-photo aspect-w-4 aspect-h-3 rounded-lg overflow-hidden">
+                    <img src="/api/placeholder/400/300?text=Loading" alt="Destination image" class="w-full h-full object-cover">
+                </div>
+                <div class="gallery-photo aspect-w-4 aspect-h-3 rounded-lg overflow-hidden">
+                    <img src="/api/placeholder/400/300?text=Loading" alt="Destination image" class="w-full h-full object-cover">
+                </div>
+                <div class="gallery-photo aspect-w-4 aspect-h-3 rounded-lg overflow-hidden">
+                    <img src="/api/placeholder/400/300?text=Loading" alt="Destination image" class="w-full h-full object-cover">
+                </div>
             </div>
         </section>
         
@@ -644,122 +675,6 @@
                             index: i,
                             title: lines[i].trim()
                         });
-                    }
-                }
-                
-                // Create enhanced view HTML
-                let enhancedHTML = '';
-                
-                // If we found day headings, create a day-by-day view
-                if (dayHeadings.length > 0) {
-                    // Create day selector
-                    enhancedHTML += `
-                        <div class="day-selector flex space-x-2 overflow-x-auto pb-4 mb-6">
-                    `;
-                    
-                    dayHeadings.forEach((day, index) => {
-                        const isFirst = index === 0;
-                        const dayNumber = day.title.match(/\d+/)[0];
-                        
-                        enhancedHTML += `
-                            <button class="enhanced-day-btn flex flex-col items-center justify-center ${isFirst ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200'} rounded-lg py-2 px-4 min-w-[80px]" data-day="${index}">
-                                <span class="text-xs">Day</span>
-                                <span class="font-bold">${dayNumber}</span>
-                            </button>
-                        `;
-                    });
-                    
-                    enhancedHTML += `</div>`;
-                    
-                    // Create day content sections
-                    enhancedHTML += `<div class="enhanced-days-container">`;
-                    
-                    dayHeadings.forEach((day, index) => {
-                        const isFirst = index === 0;
-                        const nextDayIndex = (index < dayHeadings.length - 1) ? dayHeadings[index + 1].index : lines.length;
-                        const dayContent = lines.slice(day.index, nextDayIndex).join('\n');
-                        
-                        // Extract day title and activities
-                        const dayTitle = day.title.replace(/^####\s+/, '').trim();
-                        const activities = extractActivities(dayContent);
-                        
-                        enhancedHTML += `
-                            <div class="day-details ${isFirst ? '' : 'hidden'}" data-day-content="${index}">
-                                <div class="flex items-center mb-6">
-                                    <h2 class="text-2xl font-bold">${dayTitle}</h2>
-                                </div>
-                                
-                                <div class="day-card bg-white overflow-hidden">
-                                    <div class="p-6">
-                                        <div class="space-y-8">
-                        `;
-                        
-                        // Add activities
-                        activities.forEach((activity, actIndex) => {
-                            const isLastActivity = actIndex === activities.length - 1;
-                            
-                            enhancedHTML += `
-                                <div class="flex">
-                                    <div class="timeline-point ${isLastActivity ? 'timeline-point-last' : ''}"></div>
-                                    <div class="w-full">
-                                        <div class="activity-card p-4">
-                                            <div class="flex items-start">
-                                                <div>
-                                                    <h4 class="font-bold mb-1">${activity.title}</h4>
-                                                    ${activity.description ? `<p class="text-gray-600 text-sm mb-3">${activity.description}</p>` : ''}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        });
-                        
-                        enhancedHTML += `
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    
-                    enhancedHTML += `</div>`;
-                } else {
-                    // If we couldn't parse days, just format the content nicely
-                    enhancedHTML = `
-                        <div class="bg-white rounded-xl shadow-sm overflow-hidden p-6">
-                            <div class="itinerary-content">
-                                ${formatItineraryContent(itineraryText)}
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                // Add the enhanced HTML to the view
-                enhancedView.innerHTML = enhancedHTML;
-                
-                // Add event listeners to day buttons
-                const dayButtons = document.querySelectorAll('.enhanced-day-btn');
-                dayButtons.forEach(button => {
-                    button.addEventListener('click', function() {
-                        const dayIndex = this.getAttribute('data-day');
-                        
-                        // Update active button
-                        dayButtons.forEach(btn => {
-                            btn.classList.remove('bg-blue-600', 'text-white');
-                            btn.classList.add('bg-gray-100', 'hover:bg-gray-200');
-                        });
-                        this.classList.remove('bg-gray-100', 'hover:bg-gray-200');
-                        this.classList.add('bg-blue-600', 'text-white');
-                        
-                        // Show selected day
-                        const dayContents = document.querySelectorAll('.day-details');
-                        dayContents.forEach(content => {
-                            content.classList.add('hidden');
-                        });
-                        document.querySelector(`[data-day-content="${dayIndex}"]`).classList.remove('hidden');
-                    });
-                });
             } catch (error) {
                 console.error('Error enhancing itinerary:', error);
                 // Fallback to simple formatting
@@ -879,12 +794,119 @@
             
             return result.join('\n');
         }
-    </script>
-    
-    <!-- Include your existing scripts for compatibility -->
-    <script src="./js/api.js"></script>
-    <script src="./js/script.js"></script>
-    <script src="./js/enhancements.js"></script>
-    <script src="./js/image-api.js"></script>
-</body>
-</html>
+                    }
+                }
+                
+                // Create enhanced view HTML
+                let enhancedHTML = '';
+                
+                // If we found day headings, create a day-by-day view
+                if (dayHeadings.length > 0) {
+                    // Create day selector
+                    enhancedHTML += `
+                        <div class="day-selector flex space-x-2 overflow-x-auto pb-4 mb-6">
+                    `;
+                    
+                    dayHeadings.forEach((day, index) => {
+                        const isFirst = index === 0;
+                        const dayNumber = day.title.match(/\d+/)[0];
+                        
+                        enhancedHTML += `
+                            <button class="enhanced-day-btn flex flex-col items-center justify-center ${isFirst ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200'} rounded-lg py-2 px-4 min-w-[80px]" data-day="${index}">
+                                <span class="text-xs">Day</span>
+                                <span class="font-bold">${dayNumber}</span>
+                            </button>
+                        `;
+                        
+                        // Add activities
+                        activities.forEach((activity, actIndex) => {
+                            const isLastActivity = actIndex === activities.length - 1;
+                            
+                            enhancedHTML += `
+                                <div class="flex">
+                                    <div class="timeline-point ${isLastActivity ? 'timeline-point-last' : ''}"></div>
+                                    <div class="w-full">
+                                        <div class="activity-card p-4">
+                                            <div class="flex items-start">
+                                                <div>
+                                                    <h4 class="font-bold mb-1">${activity.title}</h4>
+                                                    ${activity.description ? `<p class="text-gray-600 text-sm mb-3">${activity.description}</p>` : ''}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        
+                        enhancedHTML += `
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    enhancedHTML += `</div>`;
+                } else {
+                    // If we couldn't parse days, just format the content nicely
+                    enhancedHTML = `
+                        <div class="bg-white rounded-xl shadow-sm overflow-hidden p-6">
+                            <div class="itinerary-content">
+                                ${formatItineraryContent(itineraryText)}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Add the enhanced HTML to the view
+                enhancedView.innerHTML = enhancedHTML;
+                
+                // Add event listeners to day buttons
+                const dayButtons = document.querySelectorAll('.enhanced-day-btn');
+                dayButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const dayIndex = this.getAttribute('data-day');
+                        
+                        // Update active button
+                        dayButtons.forEach(btn => {
+                            btn.classList.remove('bg-blue-600', 'text-white');
+                            btn.classList.add('bg-gray-100', 'hover:bg-gray-200');
+                        });
+                        this.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                        this.classList.add('bg-blue-600', 'text-white');
+                        
+                        // Show selected day
+                        const dayContents = document.querySelectorAll('.day-details');
+                        dayContents.forEach(content => {
+                            content.classList.add('hidden');
+                        });
+                        document.querySelector(`[data-day-content="${dayIndex}"]`).classList.remove('hidden');
+                    });
+                });
+                    });
+                    
+                    enhancedHTML += `</div>`;
+                    
+                    // Create day content sections
+                    enhancedHTML += `<div class="enhanced-days-container">`;
+                    
+                    dayHeadings.forEach((day, index) => {
+                        const isFirst = index === 0;
+                        const nextDayIndex = (index < dayHeadings.length - 1) ? dayHeadings[index + 1].index : lines.length;
+                        const dayContent = lines.slice(day.index, nextDayIndex).join('\n');
+                        
+                        // Extract day title and activities
+                        const dayTitle = day.title.replace(/^####\s+/, '').trim();
+                        const activities = extractActivities(dayContent);
+                        
+                        enhancedHTML += `
+                            <div class="day-details ${isFirst ? '' : 'hidden'}" data-day-content="${index}">
+                                <div class="flex items-center mb-6">
+                                    <h2 class="text-2xl font-bold">${dayTitle}</h2>
+                                </div>
+                                
+                                <div class="day-card bg-white overflow-hidden">
+                                    <div class="p-6">
+                                        <div class="space-y-8">
+                        `;
